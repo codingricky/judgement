@@ -4,11 +4,12 @@ defmodule Judgement.PlayerService do
     alias Judgement.Rating
 
     def create_player(name, email) do
-       case %Player{name: name, email: email, rating: %Rating{}}
-        |> Repo.insert do 
-        {:ok, struct} ->
-        {:error, changeset} -> 
-
+       result = %Player{name: name, email: email, rating: %Rating{}}
+                          |> Repo.insert
+       case result do
+        {:ok, player} -> player
+        {:error, player} -> raise "problems creating a player" 
+       end
     end
 
 
