@@ -9,13 +9,13 @@ defmodule Judgement.GameService do
                           |> Repo.insert
        case result do
         {:ok, player} -> player
-        {:error, player} -> raise "problems creating a player" 
+        {:error, _player} -> raise "problems creating a player" 
        end
     end
 
-    def find(email) do
+    def find_player(email) do
       Repo.get_by(Player, email: email)
-      |> Repo.preload :rating
+      |> Repo.preload(:rating)
     end
 
     def create_result(winner, loser) do
