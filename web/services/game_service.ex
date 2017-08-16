@@ -37,6 +37,11 @@ defmodule Judgement.GameService do
         |> Repo.update
     end
 
+    def leaderboard() do
+      Player
+        |> Repo.all
+    end
+
 
   end
   

@@ -34,4 +34,20 @@ defmodule Judgement.GameServiceTest do
         assert 992 == saved_loser.rating.value
     end
 
+    def create_result(winner, loser, times) do
+        if (times > 0) do
+            GameService.create_result(winner, loser)
+            create_result(winner, loser, times - 1)            
+        end
+    end
+
+    test "leaderboard" do
+        winner = GameService.create_player("john", "john@example.com")
+        loser = GameService.create_player("joe", "joe@example.com")
+
+        create_result(winner, loser, 10)
+
+        leaderboard = GameService.leaderboard()
+        assert 2 == length(leaderboard)
+    end
 end
