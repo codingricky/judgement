@@ -2,6 +2,7 @@ defmodule Judgement.Player do
   use Judgement.Web, :model
 
   alias Judgement.Rating
+  alias Judgement.Repo
 
   schema "players" do
     field :name, :string
@@ -19,4 +20,14 @@ defmodule Judgement.Player do
     |> cast(params, [:name, :email])
     |> validate_required([:name, :email])
   end
+
+  def first do
+    [first_element] = all()
+    first_element 
+  end
+
+  def all do
+    Judgement.Player |> Repo.all |> Repo.preload(:rating)
+  end
+
 end
