@@ -41,7 +41,7 @@ defmodule Judgement.GameServiceTest do
         end
     end
 
-    test "leaderboard" do
+    test "leaderboard returns the correct results" do
         winner = GameService.create_player("john", "john@example.com")
         loser = GameService.create_player("joe", "joe@example.com")
 
@@ -49,5 +49,8 @@ defmodule Judgement.GameServiceTest do
 
         leaderboard = GameService.leaderboard()
         assert 2 == length(leaderboard)
+        [first, second] = leaderboard
+        assert 1 == first[:rank]
+        assert 1058 == first[:points]
     end
 end

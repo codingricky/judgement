@@ -19,8 +19,10 @@ defmodule Judgement.GameService do
     end
 
     def create_result(winner, loser) do
-      winner_rating_before = winner.rating.value
-      loser_rating_before = loser.rating.value
+      winner_rating = Rating |> Repo.get(winner.rating.id)
+      winner_rating_before = winner_rating.value
+      loser_rating = Rating |> Repo.get(loser.rating.id)      
+      loser_rating_before = loser_rating.value
       {winner_rating_after, loser_rating_after} = Elo.rate(winner_rating_before, loser_rating_before, :win, k_factor: 15, round: :down)
       %Result{winner: winner, 
               loser: loser,
@@ -40,6 +42,9 @@ defmodule Judgement.GameService do
     def leaderboard() do
       Player
         |> Repo.all
+        |> Repo.preload(:rating)
+        |> Enum.with_index(1)
+        |> Enum.map(fn {p, index} -> %{rank: index, points: p.rating.value} end)
     end
 
 
