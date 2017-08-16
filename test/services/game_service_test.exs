@@ -49,8 +49,12 @@ defmodule Judgement.GameServiceTest do
 
         leaderboard = GameService.leaderboard()
         assert 2 == length(leaderboard)
-        [first, second] = leaderboard
+        [first, _second] = leaderboard
+
         assert 1 == first[:rank]
         assert 1058 == first[:points]
+        assert "john" == first[:name]
+        assert 10 == first[:wins]
+        assert 0 == first[:losses]
     end
 end

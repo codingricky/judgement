@@ -3,6 +3,7 @@ defmodule Judgement.GameService do
     alias Judgement.Player
     alias Judgement.Rating
     alias Judgement.Result
+    alias Judgement.ResultRepo
 
     def create_player(name, email) do
        result = %Player{name: name, email: email, rating: %Rating{}}
@@ -44,7 +45,11 @@ defmodule Judgement.GameService do
         |> Repo.all
         |> Repo.preload(:rating)
         |> Enum.with_index(1)
-        |> Enum.map(fn {p, index} -> %{rank: index, points: p.rating.value} end)
+        |> Enum.map(fn {p, index} -> %{rank: index, 
+                                      points: p.rating.value, 
+                                      name: p.name,
+                                      wins: ResultRepo.no_of_wins(p),
+                                      losses: ResultRepo.no_of_losses(p)} end)
     end
 
 

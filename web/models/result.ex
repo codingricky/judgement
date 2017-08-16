@@ -3,8 +3,8 @@ defmodule Judgement.Result do
   alias Judgement.Player
 
   schema "results" do
-    has_one :winner, Player
-    has_one :loser, Player
+    belongs_to :winner, Player
+    belongs_to :loser, Player
 
     field :winner_rating_before, :integer
     field :winner_rating_after, :integer
