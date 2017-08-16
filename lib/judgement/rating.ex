@@ -6,6 +6,7 @@ defmodule Judgement.Rating do
 
   schema "ratings" do
     field :value, :integer, default: 1000
+    belongs_to :player, Player
 
     timestamps()
   end
