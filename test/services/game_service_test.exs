@@ -56,11 +56,13 @@ defmodule Judgement.GameServiceTest do
         assert "john" == first[:name]
         assert 10 == first[:wins]
         assert 0 == first[:losses]
+        assert 100 == first[:ratio]
 
         assert 2 == second[:rank]
         assert 932 == second[:points]
         assert "joe" == second[:name]
         assert 0 == second[:wins]
         assert 10 == second[:losses]
+        assert 0 == second[:ratio]
     end
 end

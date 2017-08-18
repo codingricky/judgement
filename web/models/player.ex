@@ -23,7 +23,7 @@ defmodule Judgement.Player do
   end
 
   def first do
-    [first_element] = all()
+    [first_element, _] = all()
     first_element 
   end
 
@@ -37,6 +37,10 @@ defmodule Judgement.Player do
 
   def losses(player) do
     Result.no_of_losses(player)
+  end
+
+  def ratio(player) do
+    Result.ratio(player)
   end
 
 end

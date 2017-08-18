@@ -48,8 +48,9 @@ defmodule Judgement.GameService do
         |> Enum.map(fn {p, index} -> %{rank: index, 
                                       points: p.rating.value, 
                                       name: p.name,
-                                      wins: ResultRepo.no_of_wins(p),
-                                      losses: ResultRepo.no_of_losses(p)} end)
+                                      wins: Player.wins(p),
+                                      losses: Player.losses(p),
+                                      ratio: Player.ratio(p)} end)
     end
 
 

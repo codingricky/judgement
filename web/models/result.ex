@@ -43,15 +43,16 @@ defmodule Judgement.Result do
           where: p.id == ^player.id,
           select: count(r.id))
   end
-        
+
   def ratio(player) do
     wins = no_of_wins(player)
     losses = no_of_losses(player)
-    case losses do
-      {0} ->
-        wins/losses
-      {_} ->
+    total = wins + losses
+    case total do
+      0 ->
         0
+      _ ->
+        wins/total * 100
     end
   end
 
