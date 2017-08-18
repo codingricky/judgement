@@ -30,6 +30,29 @@ defmodule Judgement.Result do
     Judgement.Result |> Repo.all |> Repo.preload(:winner) |> Repo.preload(:loser)
   end
 
+  def all_results_sorted(player) do
+    wins = all_wins_sorted(player)
+    losses = all_losses_sorted(player)
+    wins ++ losses
+    |> Enum.sort(&(&1.inserted_at > &2.inserted_at))
+  end
+
+  def all_losses_sorted(player) do
+    Repo.all(from r in Judgement.Result,
+            join: (p in assoc(r, :loser)),
+            where: p.id == ^player.id,
+            select: r,
+            order_by: [desc: r.inserted_at])
+  end
+
+  def all_wins_sorted(player) do
+    Repo.all(from r in Judgement.Result,
+            join: (p in assoc(r, :winner)),
+            where: p.id == ^player.id,
+            select: r,
+            order_by: [desc: r.inserted_at])
+  end
+
   def no_of_wins(player) do
       Repo.one(from r in Judgement.Result,
             join: p in assoc(r, :winner),

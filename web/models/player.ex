@@ -43,4 +43,26 @@ defmodule Judgement.Player do
     Result.ratio(player)
   end
 
+  def streak(player) do
+    results = Result.all_results_sorted(player)
+    consecutive_wins(results, player, 0)
+  end
+
+  defp consecutive_wins([head | tail], player, streak) do
+      is_win? = head.winner_id == player.id
+      if is_win? do
+        consecutive_wins(tail, player, streak + 1)
+      else
+        streak
+      end
+  end
+
+  defp consecutive_wins([], player, streak) do
+    streak
+  end
+
+  def find(email) do
+    Repo.get_by(Judgement.Player, email: email)
+    |> Repo.preload(:rating)
+  end
 end

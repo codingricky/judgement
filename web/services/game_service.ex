@@ -53,6 +53,10 @@ defmodule Judgement.GameService do
                                       ratio: Player.ratio(p)} end)
     end
 
+    def h2h(player1, player2) do
+      
+    end
+
 
   end
   
