@@ -3,7 +3,7 @@ defmodule Judgement.Player do
 
   alias Judgement.Rating
   alias Judgement.Repo
-  alias Judgement.Results
+  alias Judgement.Result
 
   schema "players" do
     field :name, :string
@@ -32,11 +32,11 @@ defmodule Judgement.Player do
   end
 
   def wins(player) do
-    Results.no_of_wins(player)
+    Result.no_of_wins(player)
   end
 
   def losses(player) do
-    Results.no_of_losses(player)
+    Result.no_of_losses(player)
   end
 
 end
