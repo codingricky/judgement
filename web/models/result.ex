@@ -12,6 +12,7 @@ defmodule Judgement.Result do
     field :winner_rating_after, :integer
     field :loser_rating_before, :integer
     field :loser_rating_after, :integer
+    field :created_date, :date
 
     timestamps()
   end
@@ -21,8 +22,8 @@ defmodule Judgement.Result do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:winner_id, :loser_id, :winner_rating_before, :winner_rating_after, :loser_rating_before, :loser_rating_after])
-    |> validate_required([:winner_id, :loser_id, :winner_rating_before, :winner_rating_after, :loser_rating_before, :loser_rating_after])
+    |> cast(params, [:winner_id, :loser_id, :winner_rating_before, :winner_rating_after, :loser_rating_before, :loser_rating_after, :created_date])
+    |> validate_required([:winner_id, :loser_id, :winner_rating_before, :winner_rating_after, :loser_rating_before, :loser_rating_after, :created_date])
   end
 
      
@@ -93,6 +94,19 @@ defmodule Judgement.Result do
               join: w in assoc(r, :winner),
               where: w.id == ^opponent.id,
               select: count(r.id))
+  end
+
+  def no_of_recent_games(player, date) do
+    Repo.one(from r in Judgement.Result,
+            join: p in assoc(r, :winner),
+            where: p.id == ^player.id,
+            where: r.inserted_at > ^date,
+            select: count(r.id)) +
+      Repo.one(from r in Judgement.Result,
+            join: p in assoc(r, :loser),
+            where: p.id == ^player.id,
+            where: r.inserted_at > ^date,
+            select: count(r.id))
   end
 
 end

@@ -39,6 +39,15 @@ defmodule Judgement.Player do
     Result.no_of_losses(player)
   end
 
+  def no_of_games(player) do
+    Result.all_results_sorted(player)
+    |> length
+  end
+
+  def no_of_recent_games(player, date) do
+    Result.no_of_recent_games(player, date)
+  end
+
   def ratio(player) do
     Result.ratio(player)
   end
@@ -69,5 +78,13 @@ defmodule Judgement.Player do
   def h2h(player, opponent) do
     %{wins: Result.no_of_wins_against(player, opponent), 
       losses: Result.no_of_losses_against(player, opponent)}
+  end
+
+  def is_active?(player) do
+    day_in_seconds = 60 * 60 * 24    
+    twenty_days_ago = NaiveDateTime.utc_now
+                          |> NaiveDateTime.add(-1 * day_in_seconds * 20, :second)
+
+    no_of_recent_games(player, twenty_days_ago) >= 10
   end
 end

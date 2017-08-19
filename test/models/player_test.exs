@@ -2,6 +2,7 @@ defmodule Judgement.PlayerTest do
   use ExUnit.Case
   
   alias Judgement.Player
+  alias Judgement.Result
   alias Judgement.Repo
   alias Judgement.GameService
 
@@ -77,5 +78,29 @@ defmodule Judgement.PlayerTest do
     h2h = Player.h2h(winner, loser)
     assert 10 == h2h[:wins]
     assert 1 == h2h[:losses]     
+  end
+
+  test "is active requires at least 10 games" do
+    winner = Player.find(@winner_email)
+    loser = Player.find(@loser_email)    
+    
+    assert false == Player.is_active?(winner)
+    create_result(9)
+
+    assert true == Player.is_active?(winner)
+    assert true == Player.is_active?(loser)    
+  end
+
+  test "is active doesn't count if games are too old" do
+    winner = Player.find(@winner_email) 
+    loser = Player.find(@loser_email)    
+    create_result(9)
+    
+    day_in_seconds = 60 * 60 * 24
+    twenty_one_days_ago = NaiveDateTime.utc_now
+                  |> NaiveDateTime.add(day_in_seconds * 21 * -1, :second)
+    Repo.update_all(Result, [set: [inserted_at: twenty_one_days_ago]])
+    assert false == Player.is_active?(winner)
+    assert false == Player.is_active?(loser)    
   end
 end
