@@ -31,6 +31,13 @@ defmodule Judgement.Result do
     Judgement.Result |> Repo.all |> Repo.preload(:winner) |> Repo.preload(:loser)
   end
 
+  def all_sorted_by_creation_date do 
+      Repo.all(from r in Judgement.Result,
+                  order_by: [desc: r.inserted_at]) 
+      |> Repo.preload(:winner) 
+      |> Repo.preload(:loser)
+  end
+
   def all_results_sorted(player) do
     all_wins_sorted(player) ++ all_losses_sorted(player)
     |> Enum.sort(&(&1.id > &2.id))

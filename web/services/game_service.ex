@@ -40,6 +40,23 @@ defmodule Judgement.GameService do
         |> Repo.update
     end
 
+    def undo_last_result() do
+      [first | _] = Result.all_sorted_by_creation_date
+      winner_rating_before = first.winner_rating_before
+      loser_rating_before = first.loser_rating_before
+
+      winner = Player |> Repo.get(first.winner_id) |> Repo.preload(:rating)
+      loser = Player |> Repo.get(first.loser_id) |> Repo.preload(:rating)
+      
+      Ecto.Changeset.change(winner.rating, %{value: winner_rating_before})
+        |> Repo.update
+
+      Ecto.Changeset.change(loser.rating, %{value: loser_rating_before})
+        |> Repo.update
+
+      Repo.delete(first)
+    end
+
     def leaderboard() do
       Player
         |> Repo.all
@@ -54,5 +71,8 @@ defmodule Judgement.GameService do
                                       streak: Player.streak(p)} end)
     end
 
+    def undo_last_result() do
+      
+    end
   end
   

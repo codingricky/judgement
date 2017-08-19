@@ -3,6 +3,7 @@ defmodule Judgement.GameServiceTest do
 
     alias Judgement.Repo
     alias Judgement.GameService
+    alias Judgement.Result
 
     setup do
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
@@ -32,6 +33,39 @@ defmodule Judgement.GameServiceTest do
 
         saved_loser = GameService.find_player(loser.email)
         assert 992 == saved_loser.rating.value
+    end
+
+    test "undos the last result" do
+        winner = GameService.create_player("john", "john@example.com")
+        loser = GameService.create_player("joe", "joe@example.com")
+
+        GameService.create_result(winner, loser)
+        GameService.undo_last_result()
+
+        saved_winner = GameService.find_player(winner.email)
+        assert 1000 == saved_winner.rating.value
+
+        saved_loser = GameService.find_player(loser.email)
+        assert 1000 == saved_loser.rating.value
+
+        assert 0 == length(Result.all)
+    end
+
+    test "undos the last result multiple times" do
+        winner = GameService.create_player("john", "john@example.com")
+        loser = GameService.create_player("joe", "joe@example.com")
+
+        create_result(winner, loser, 2)
+        GameService.undo_last_result()
+        GameService.undo_last_result()
+        
+        saved_winner = GameService.find_player(winner.email)
+        assert 1000 == saved_winner.rating.value
+
+        saved_loser = GameService.find_player(loser.email)
+        assert 1000 == saved_loser.rating.value
+
+        assert 0 == length(Result.all) 
     end
 
     def create_result(winner, loser, times) do
