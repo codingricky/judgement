@@ -57,12 +57,17 @@ defmodule Judgement.Player do
       end
   end
 
-  defp consecutive_wins([], player, streak) do
+  defp consecutive_wins([], _player, streak) do
     streak
   end
 
   def find(email) do
     Repo.get_by(Judgement.Player, email: email)
     |> Repo.preload(:rating)
+  end
+
+  def h2h(player, opponent) do
+    %{wins: Result.no_of_wins_against(player, opponent), 
+      losses: Result.no_of_losses_against(player, opponent)}
   end
 end

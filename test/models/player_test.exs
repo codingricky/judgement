@@ -67,4 +67,15 @@ defmodule Judgement.PlayerTest do
     
     assert 2 == Player.streak(winner)
   end
+
+  test "h2h" do
+    winner = Player.find(@winner_email)
+    loser = Player.find(@loser_email)
+    create_result(9)
+    GameService.create_result(loser, winner)
+    
+    h2h = Player.h2h(winner, loser)
+    assert 10 == h2h[:wins]
+    assert 1 == h2h[:losses]     
+  end
 end

@@ -57,6 +57,7 @@ defmodule Judgement.GameServiceTest do
         assert 10 == first[:wins]
         assert 0 == first[:losses]
         assert 100 == first[:ratio]
+        assert 10 == first[:streak]
 
         assert 2 == second[:rank]
         assert 932 == second[:points]
@@ -64,5 +65,6 @@ defmodule Judgement.GameServiceTest do
         assert 0 == second[:wins]
         assert 10 == second[:losses]
         assert 0 == second[:ratio]
+        assert 0 == second[:streak]
     end
 end

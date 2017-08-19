@@ -50,13 +50,9 @@ defmodule Judgement.GameService do
                                       name: p.name,
                                       wins: Player.wins(p),
                                       losses: Player.losses(p),
-                                      ratio: Player.ratio(p)} end)
+                                      ratio: Player.ratio(p),
+                                      streak: Player.streak(p)} end)
     end
-
-    def h2h(player1, player2) do
-      
-    end
-
 
   end
   

@@ -31,10 +31,8 @@ defmodule Judgement.Result do
   end
 
   def all_results_sorted(player) do
-    wins = all_wins_sorted(player)
-    losses = all_losses_sorted(player)
-    wins ++ losses
-    |> Enum.sort(&(&1.inserted_at > &2.inserted_at))
+    all_wins_sorted(player) ++ all_losses_sorted(player)
+    |> Enum.sort(&(&1.id > &2.id))
   end
 
   def all_losses_sorted(player) do
@@ -77,6 +75,24 @@ defmodule Judgement.Result do
       _ ->
         wins/total * 100
     end
+  end
+
+  def no_of_wins_against(player, opponent) do
+      Repo.one(from r in Judgement.Result,
+                join: p in assoc(r, :winner),
+                where: p.id == ^player.id,
+                join: l in assoc(r, :loser),
+                where: l.id == ^opponent.id,
+                select: count(r.id))
+  end
+
+  def no_of_losses_against(player, opponent) do
+    Repo.one(from r in Judgement.Result,
+              join: p in assoc(r, :loser),
+              where: p.id == ^player.id,
+              join: w in assoc(r, :winner),
+              where: w.id == ^opponent.id,
+              select: count(r.id))
   end
 
 end
