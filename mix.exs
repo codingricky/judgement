@@ -20,7 +20,7 @@ defmodule Judgement.Mixfile do
   def application do
     [
       mod: {Judgement, []},
-      extra_applications: [:logger]
+      extra_applications: [:logger, :oauth2]
     ]
   end
 
@@ -42,7 +42,8 @@ defmodule Judgement.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:elo, "~> 0.1.0"},
-      {:ex_machina, "~> 2.0", only: :test}
+      {:ex_machina, "~> 2.0", only: :test},
+      {:oauth2, "~> 0.9"}      
     ]
   end
 

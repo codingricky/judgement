@@ -15,8 +15,23 @@ defmodule Judgement.Router do
 
   scope "/", Judgement do
     pipe_through :browser # Use the default browser stack
-    get "/users", UserController, :index
+
     get "/", PageController, :index
+  end
+
+  scope "/auth", Judgement do
+    pipe_through :browser
+
+    get "/:provider", AuthController, :index
+    get "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
+  end
+
+  # Fetch the current user from the session and add it to `conn.assigns`. This
+  # will allow you to have access to the current user in your views with
+  # `@current_user`.
+  defp assign_current_user(conn, _) do
+    assign(conn, :current_user, get_session(conn, :current_user))
   end
 
   # Other scopes may use custom stacks.

@@ -54,3 +54,6 @@ config :judgement, Judgement.Repo,
   database: "judgement_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :oauth2, debug: true
+  
