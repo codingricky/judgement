@@ -19,7 +19,10 @@ defmodule Judgement.Player do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:name, :email])
+    |> cast_assoc(:rating)    
     |> validate_required([:name, :email])
+    |> unique_constraint(:email)
+    |> unique_constraint(:name)    
   end
 
   def first do

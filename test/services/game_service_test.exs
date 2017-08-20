@@ -22,6 +22,16 @@ defmodule Judgement.GameServiceTest do
         assert 1000 == saved_player.rating.value
     end
 
+    test "create a player with a duplicate email should fail" do
+        GameService.create_player("john", "john@example.com")
+        {:error, _} = GameService.create_player("some other thing", "john@example.com")
+    end
+
+    test "create a player with a duplicate name should fail" do
+        GameService.create_player("john", "john@example.com")
+        {:error, _} = GameService.create_player("john", "bozo@bozo.com")
+    end
+
     test "create a result" do
         {:ok, winner} = GameService.create_player("john", "john@example.com")
         {:ok, loser} = GameService.create_player("joe", "joe@example.com")

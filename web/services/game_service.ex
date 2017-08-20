@@ -6,7 +6,7 @@ defmodule Judgement.GameService do
     alias Judgement.ResultRepo
 
     def create_player(name, email) do
-       %Player{name: name, email: email, rating: %Rating{}}
+       Player.changeset(%Player{}, %{name: name, email: email, rating: %{}})
                           |> Repo.insert
     end
 
