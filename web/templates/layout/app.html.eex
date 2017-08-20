@@ -1,35 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+<html>
+<head>
+  <title>DiUS Table Tennis Championship</title>
+  <meta name='apple-mobile-web-app-capable' content='yes' />
+  <meta name='apple-mobile-web-app-status-bar-style' content='black' />
+  <meta name='viewport', content='width = device-width, initial-scale = 1, maximum-scale = 1, user-scalable = yes' />
+  
+  <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+  <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
 
-    <title>Hello Judgement!</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
-  </head>
+ <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' rel='stylesheet' type='text/css'>
 
-  <body>
-    <div class="container">
-      <header class="header">
-        <nav role="navigation">
-          <ul class="nav nav-pills pull-right">
-            <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
-          </ul>
-        </nav>
-        <span class="logo"></span>
-      </header>
+</head>
+<body>
+  <div id='container'>
+    <header>
+    <a class="brand" href="/">
+        <div class='brand-name'>DiUS Table Tennis Championship</div>
+        <div class='brand-label'>Home</div>
+    </a>
+      <nav>
+        <ul><li class="home">Home</li></ul>
+      </nav>
+    </header>
 
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-
-      <main role="main">
+    <div>
+       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+    </div>
+    <div id='main'>
         <%= render @view_module, @view_template, assigns %>
-      </main>
-
-    </div> <!-- /container -->
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-  </body>
+    </div>
+  </div>
+</body>
 </html>
+

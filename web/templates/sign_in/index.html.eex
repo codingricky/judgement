@@ -1,0 +1,7 @@
+    <h2>Log in</h2>
+
+    <div class="container">
+    You need to sign in or sign up before continuing.
+    </div>
+
+    <%= link("Sign in with Gmail", to: "/auth/google") %>

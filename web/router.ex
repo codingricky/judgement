@@ -17,6 +17,7 @@ defmodule Judgement.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/users/sign_in", SignInController, :index    
   end
 
   scope "/auth", Judgement do
