@@ -1,2 +1,17 @@
-<%= form_for @changeset, result_path(@conn, :create), [class: "form-results"], fn f -> %>
+<%= form_for @conn, result_path(@conn, :create), [as: :result, class: "form-results"], fn f -> %>
+    <div>
+        <%= select(f, :winner, player_list(@conn), class: "players") %>
+        <%= select(f, :relation, ["defeated": "defeated", "lost to": "lost to"]) %>
+        <%= select(f, :opponent, player_list(@conn), class: "players") %>
+        <%= select(f, :times, ["1": 1, "2": 2, "3": 3, "4": 4, "5": 5]) %>
+        <span>times</span>
+    </div>
+    <div class="form-actions">
+        <%= submit("Create Result", class: "btn btn-primary") %>
+        <%= link "Cancel", to: "/", class: "btn btn-warning" %>
+    </div>
 <% end %>
+
+<script>
+    $(".players").chosen();
+</script>
