@@ -6,12 +6,8 @@ defmodule Judgement.GameService do
     alias Judgement.ResultRepo
 
     def create_player(name, email) do
-       result = %Player{name: name, email: email, rating: %Rating{}}
+       %Player{name: name, email: email, rating: %Rating{}}
                           |> Repo.insert
-       case result do
-        {:ok, player} -> player
-        {:error, _player} -> raise "problems creating a player" 
-       end
     end
 
     def find_player(email) do

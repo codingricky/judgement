@@ -12,8 +12,8 @@ defmodule Judgement.PlayerTest do
   setup do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
     
-    winner = GameService.create_player("john", @winner_email)
-    loser = GameService.create_player("joe", @loser_email)
+    {:ok, winner} = GameService.create_player("john", @winner_email)
+    {:ok, loser} = GameService.create_player("joe", @loser_email)
     GameService.create_result(winner, loser)
     :ok
   end

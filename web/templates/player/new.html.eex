@@ -24,7 +24,7 @@
       </div>
     </div>
   <div class="form-actions">
-    <%= submit("Submit", class: "btn btn-primary") %>
+    <%= submit("Create Player", class: "btn btn-primary") %>
     <%= link "Cancel", to: "/", class: "btn btn-warning" %>
   </div>
 

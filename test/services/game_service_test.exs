@@ -10,12 +10,12 @@ defmodule Judgement.GameServiceTest do
     end
 
     test "create a player" do
-        player = GameService.create_player("john", "john@example.com")
+        {:ok, player} = GameService.create_player("john", "john@example.com")
         refute nil == player    
     end
 
     test "create a rating" do
-        player = GameService.create_player("john", "john@example.com")
+        {:ok, player} = GameService.create_player("john", "john@example.com")        
         saved_player = GameService.find_player(player.email)
         refute nil == saved_player
         refute nil == saved_player.rating
@@ -23,8 +23,8 @@ defmodule Judgement.GameServiceTest do
     end
 
     test "create a result" do
-        winner = GameService.create_player("john", "john@example.com")
-        loser = GameService.create_player("joe", "joe@example.com")
+        {:ok, winner} = GameService.create_player("john", "john@example.com")
+        {:ok, loser} = GameService.create_player("joe", "joe@example.com")
 
         GameService.create_result(winner, loser)
 
@@ -36,8 +36,8 @@ defmodule Judgement.GameServiceTest do
     end
 
     test "undos the last result" do
-        winner = GameService.create_player("john", "john@example.com")
-        loser = GameService.create_player("joe", "joe@example.com")
+        {:ok, winner} = GameService.create_player("john", "john@example.com")
+        {:ok, loser} = GameService.create_player("joe", "joe@example.com")
 
         GameService.create_result(winner, loser)
         GameService.undo_last_result()
@@ -52,8 +52,8 @@ defmodule Judgement.GameServiceTest do
     end
 
     test "undos the last result multiple times" do
-        winner = GameService.create_player("john", "john@example.com")
-        loser = GameService.create_player("joe", "joe@example.com")
+        {:ok, winner} = GameService.create_player("john", "john@example.com")
+        {:ok, loser} = GameService.create_player("joe", "joe@example.com")
 
         create_result(winner, loser, 2)
         GameService.undo_last_result()
@@ -76,8 +76,8 @@ defmodule Judgement.GameServiceTest do
     end
 
     test "leaderboard returns the correct results" do
-        winner = GameService.create_player("john", "john@example.com")
-        loser = GameService.create_player("joe", "joe@example.com")
+        {:ok, winner} = GameService.create_player("john", "john@example.com")
+        {:ok, loser} = GameService.create_player("joe", "joe@example.com")
 
         create_result(winner, loser, 10)
 
