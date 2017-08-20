@@ -13,11 +13,18 @@ defmodule Judgement.Router do
     plug :accepts, ["json"]
   end
 
+  # no login
   scope "/", Judgement do
-    pipe_through :browser # Use the default browser stack
+    pipe_through :browser
+
+    get "/users/sign_in", SignInController, :index    
+  end
+
+  # login
+  scope "/", Judgement do
+    pipe_through [:browser, Judgement.Plugs.RequireLogin]
 
     get "/", PageController, :index
-    get "/users/sign_in", SignInController, :index    
   end
 
   scope "/auth", Judgement do
