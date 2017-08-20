@@ -1,0 +1,2 @@
+<%= form_for @changeset, result_path(@conn, :create), [class: "form-results"], fn f -> %>
+<% end %>

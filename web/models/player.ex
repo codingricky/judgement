@@ -31,7 +31,9 @@ defmodule Judgement.Player do
   end
 
   def all do
-    Judgement.Player |> Repo.all |> Repo.preload(:rating)
+    Repo.all(from p in Judgement.Player,
+              select: p,
+              order_by: [asc: p.name]) |> Repo.preload(:rating)
   end
 
   def wins(player) do
