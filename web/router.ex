@@ -20,11 +20,12 @@ defmodule Judgement.Router do
     get "/users/sign_in", SignInController, :index    
   end
 
-  # login
+  # logged in
   scope "/", Judgement do
     pipe_through [:browser, Judgement.Plugs.RequireLogin]
 
     get "/", PageController, :index
+    resources "/player", PlayerController
   end
 
   scope "/auth", Judgement do

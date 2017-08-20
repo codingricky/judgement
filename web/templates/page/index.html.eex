@@ -4,7 +4,7 @@
 <div class="row-fluid">
   <div class='span12'>
     <div class='well'>
-      <%= link "New Player", to: "/", class: "btn btn-primary" %>
+      <%= link "New Player", to: "/player/new", class: "btn btn-primary" %>
       <%= link "Add Result", to: "/", class: "btn btn-primary" %>
 
     </div>
