@@ -22,7 +22,7 @@
           <strong><%= result.winner.name %></strong>
         <% end %>
         <small>defeats</small>
-        <%= link to: player_path(@conn,  :show, result.loser.id), class: "player" do %>
+        <%= link to: player_path(@conn,  :edit, result.loser.id), class: "player" do %>
           <%= img_tag(static_path(@conn, "/images/head.png")) %>
           <strong><%= result.loser.name %></strong>
           <time><%= time_ago_in_words(result.inserted_at) %> ago</time>
@@ -35,8 +35,49 @@
   <div class="span7">
     <h4>Current Rankings of Active Players<sup>*</sup> | <span><%= link "Daily Rankings", to: "" %></span> |  <span><%= link "Full Rankings", to: "" %></span> </h4>
     <table>
-
+        <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Player</th>
+          <th>Color</th>
+          <th>Rating</th>
+          <th><abbr title='Wins'>W</abbr></th>
+          <th><abbr title='Losses'>L</abbr></th>
+          <th><abbr title='Total Games'>Games</abbr></th>
+          <th><abbr title='Win Loss Ratio'>W/L ratio</abbr></th>
+          <th><abbr title='Current winning streak'>Streak</abbr></th>
+          <th><abbr title='Last 10 Games'>Last 10</abbr></th>
+        </tr>
+        </thead>
       <tbody>
+      <%= for player <- @leaderboard do %>
+       <tr>
+      <td><%= player[:rank] %></td>
+      <td>
+        <div class='player'>
+        <%= link to: player_path(@conn, :show, player[:player_id], class: "player") do %>
+            <%= img_tag(static_path(@conn, "/images/head.png")) %>
+            <strong><%= player[:name] %></strong>
+        <% end %>
+        </div>
+      </td>
+      <td>
+        <div>
+          <svg height="20" width="20">
+            <circle cx="10" cy="10" r="5" stroke="black" stroke-width="1" fill="" />
+          </svg>
+        </div>
+      </td>
+
+      <td><%= player[:points] %></td>
+      <td><%= player[:wins] %></td>
+      <td><%= player[:losses] %></td>
+      <td><%= player[:total] %></td>
+      <td><%= player[:ratio] %></td>
+      <td><%= player[:streak] %></td>
+      <td><span class="lastn"></span></td>
+
+     <% end %>
       </tbody>
 
     </table>

@@ -71,10 +71,12 @@ defmodule Judgement.GameService do
         |> Repo.preload(:rating)
         |> Enum.with_index(1)
         |> Enum.map(fn {p, index} -> %{rank: index, 
+                                      player_id: p.id,
                                       points: p.rating.value, 
                                       name: p.name,
                                       wins: Player.wins(p),
                                       losses: Player.losses(p),
+                                      total: Player.wins(p) + Player.losses(p),
                                       ratio: Player.ratio(p),
                                       streak: Player.streak(p)} end)
     end
