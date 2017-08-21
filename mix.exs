@@ -44,7 +44,8 @@ defmodule Judgement.Mixfile do
       {:elo, "~> 0.1.0"},
       {:ex_machina, "~> 2.0", only: :test},
       {:oauth2, "~> 0.9"},
-      {:phoenix_html_simplified_helpers, "~> 1.3.2"}  
+      {:phoenix_html_simplified_helpers, "~> 1.3.2"},
+      {:number, "~> 0.4.1"}  
     ]
   end
 
