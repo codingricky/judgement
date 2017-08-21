@@ -80,9 +80,5 @@ defmodule Judgement.GameService do
                                       ratio: Player.ratio(p),
                                       streak: Player.streak(p)} end)
     end
-
-    def undo_last_result() do
-      
-    end
   end
   

@@ -25,6 +25,7 @@ defmodule Judgement.Router do
     pipe_through [:browser, Judgement.Plugs.RequireLogin]
 
     get "/", PageController, :index
+    get "/undo", PageController, :undo    
     resources "/player", PlayerController
     resources "/result", ResultController    
   end

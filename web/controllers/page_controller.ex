@@ -11,4 +11,15 @@ defmodule Judgement.PageController do
     |> assign(:recent_results, Result.recent)
     |> render "index.html", leaderboard: leaderboard
   end
+
+  def undo(conn, _params) do
+    GameService.undo_last_result()
+
+    conn
+    |> redirect
+  end
+
+  defp redirect(conn) do
+    conn |> Phoenix.Controller.redirect(to: "/") |> halt        
+  end
 end

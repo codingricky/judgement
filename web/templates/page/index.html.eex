@@ -6,6 +6,7 @@
     <div class='well'>
       <%= link "New Player", to: player_path(@conn, :new), class: "btn btn-primary" %>
       <%= link "Add Result", to: result_path(@conn, :new), class: "btn btn-primary" %>
+      <%= link "Undo Last Result", to: page_path(@conn, :undo), class: "btn btn-primary" %>
 
     </div>
   </div>
