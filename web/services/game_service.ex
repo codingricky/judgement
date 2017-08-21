@@ -15,6 +15,13 @@ defmodule Judgement.GameService do
       |> Repo.preload(:rating)
     end
 
+    def create_result(winner, loser, times) do
+      create_result(winner, loser)
+      if (times > 0) do 
+        create_result(winner, loser, times - 1) 
+      end
+    end
+  
     def create_result(winner, loser) do
       winner_rating = Rating |> Repo.get(winner.rating.id)
       winner_rating_before = winner_rating.value

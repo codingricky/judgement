@@ -17,13 +17,14 @@ defmodule Judgement.ResultController do
     def create(conn, %{"result" => %{"winner" => winner_name, "opponent" => loser_name, "times" => times}}) do
         winner = Player.find_by_name(winner_name)
         loser = Player.find_by_name(loser_name)
+        {parsed_times, _} = Integer.parse(times)
         if (winner == loser) do
             conn
-            |> put_flash(:info, "winner can not be the same as loser")
+            |> put_flash(:info, "Winner can not be the same as loser")
             |> get_player_list
             |> render_page
         else
-            GameService.create_result(winner, loser)
+            GameService.create_result(winner, loser, parsed_times)
             conn
             |> redirect
         end
