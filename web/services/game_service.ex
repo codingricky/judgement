@@ -10,6 +10,11 @@ defmodule Judgement.GameService do
                           |> Repo.insert
     end
 
+    def update_player(name, email) do
+      Player.changeset(%Player{}, %{name: name, email: email})
+                         |> Repo.update
+     end
+
     def find_player(email) do
       Repo.get_by(Player, email: email)
       |> Repo.preload(:rating)

@@ -40,10 +40,10 @@ defmodule Judgement.Result do
   end
 
   def recent(player) do
-    results = all_results_sorted(player)
+    results = all_results_sorted(player)    
     case length(results) do 
-        x when x > 20 -> Enum.slice(results, -20..-1)
-        x -> Enum.slice(results, -x..-1)
+        x when x > 20 -> Enum.slice(results, 1..20)
+        x -> Enum.slice(results, 1..x)
     end
   end
 
