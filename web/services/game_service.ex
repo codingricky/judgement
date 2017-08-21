@@ -16,8 +16,8 @@ defmodule Judgement.GameService do
     end
 
     def create_result(winner, loser, times) do
-      create_result(winner, loser)
       if (times > 0) do 
+        create_result(winner, loser)        
         create_result(winner, loser, times - 1) 
       end
     end

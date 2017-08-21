@@ -13,6 +13,23 @@
 <div class="row-fluid">
 
   <div class='span5'>
+    <ol id="results">
+    <%= for result <- recent_results(@conn) do %>
+      <li>
+        <%= link to: player_path(@conn, :index), class: "player" do %>
+         <%= img_tag(static_path(@conn, "/images/head.png")) %>
+          <strong><%= result.winner.name %></strong>
+        <% end %>
+        <small>defeats</small>
+        <%= link to: player_path(@conn, :index), class: "player" do %>
+          <%= img_tag(static_path(@conn, "/images/head.png")) %>
+          <strong><%= result.loser.name %></strong>
+          <time><%= minutes_ago(result) %> minutes ago</time>
+        <% end %>
+      </li>
+    <% end %>
+    </ol>
+  </div>
 
   <div class="span7">
     <h4>Current Rankings of Active Players<sup>*</sup> | <span><%= link "Daily Rankings", to: "" %></span> |  <span><%= link "Full Rankings", to: "" %></span> </h4>
