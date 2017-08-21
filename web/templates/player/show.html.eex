@@ -1,0 +1,54 @@
+<h1>
+    <%= @player.name %>
+    <strong><%= @player.rating.value %></strong>
+</h1>
+<section class="action-buttons">
+    <span><%= link "Edit Player", to: player_path(@conn, :edit, @id), class: "btn btn-primary" %></span>
+</section>
+
+<div class="row">
+  <div class="span12">
+  </div>
+  <div class="span6">
+    <h2>Head-to-Head Records</h2>
+    <table id='ratings'>
+      <thead>
+      <tr>
+        <th>Player</th>
+        <th>Rating</th>
+        <th><abbr title='Wins'>W</abbr></th>
+        <th><abbr title='Losses'>L</abbr></th>
+      </tr>
+      </thead>
+
+      <tbody>
+        <%= for head_to_head <- @head_to_head do %>
+        <tr>
+            <td>
+                <%= link to: player_path(@conn, :show, head_to_head[:opponent].id), class: "player" do %>
+                <%= img_tag(static_path(@conn, "/images/head.png")) %>
+                <strong><%= head_to_head[:opponent].name %></strong>
+                <% end %>
+            </td>
+            <td><%= head_to_head[:rating] %></td>
+            <td><%= head_to_head[:wins] %></td>
+            <td><%= head_to_head[:losses] %></td>
+        </tr>
+        <% end %>
+      </tbody>
+
+    </table>
+  </div>
+    <div class="span6">
+        <h2>Recent Games</h2>
+        <ul id='results'>
+            <%= for result <- @results do %>
+                <li>
+                   <time><%= time_ago_in_words(result.inserted_at) %> ago</time>
+                    <%= result_message(@id, result) %>
+                    <strong><%= result_name(@id, result) %></strong>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+  </div>

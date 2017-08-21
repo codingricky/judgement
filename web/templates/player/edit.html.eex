@@ -1,0 +1,38 @@
+<%= form_for @changeset, player_path(@conn, :update, @id), [class: "form-horizontal"], fn f -> %>
+
+  <h1>Player</h1>
+  
+  <div class="control-group">
+    <%= label f, :name, class: "control-label" %>
+    <div class="controls">
+      <%= text_input f, :name, class: "input-xlarge" %>
+    </div>
+    <div>
+        <%= error_tag f, :name %>
+    </div>
+
+  </div>
+
+  <div class="control-group">
+    <%= label f, :email, class: "control-label" %>
+    <div class="controls">
+      <%= text_input f, :email, class: "input-xlarge" %>
+    </div>
+    <div>
+        <%= error_tag f, :email %>
+    </div>
+  </div>
+
+
+    <div class="control-group">
+      <%= label f, :color, class: "control-label" %>
+      <div class="controls">
+        <%= select(f, :color,  ["green": 1, "purple": 2, "red": 3, "yellow": 4, "black": 5, "pink": 6, "white": 7, "cyan": 8, "blue": 9]) %>
+      </div>
+    </div>
+  <div class="form-actions">
+    <%= submit("Save Player", class: "btn btn-primary") %>
+    <%= link "Cancel", to: "/", class: "btn btn-warning" %>
+  </div>
+
+<% end %>

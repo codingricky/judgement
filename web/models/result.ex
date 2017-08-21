@@ -37,7 +37,15 @@ defmodule Judgement.Result do
              order_by: [desc: r.inserted_at]) 
         |> Repo.preload(:winner) 
         |> Repo.preload(:loser)
- end
+  end
+
+  def recent(player) do
+    results = all_results_sorted(player)
+    case length(results) do 
+        x when x > 20 -> Enum.slice(results, -20..-1)
+        x -> Enum.slice(results, -x..-1)
+    end
+  end
 
   def all_sorted_by_creation_date do 
       Repo.all(from r in Judgement.Result,
@@ -48,6 +56,8 @@ defmodule Judgement.Result do
 
   def all_results_sorted(player) do
     all_wins_sorted(player) ++ all_losses_sorted(player)
+            |> Repo.preload(:winner) 
+        |> Repo.preload(:loser)
     |> Enum.sort(&(&1.id > &2.id))
   end
 
