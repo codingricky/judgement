@@ -1,7 +1,11 @@
+<div class="error">
+    <%= show_flash @conn %>
+</div>
+
 <%= form_for @conn, result_path(@conn, :create), [as: :result, class: "form-results"], fn f -> %>
     <div>
         <%= select(f, :winner, player_list(@conn), class: "players") %>
-        <%= select(f, :relation, ["defeated": "defeated", "lost to": "lost to"]) %>
+        <span>defeated</span>
         <%= select(f, :opponent, player_list(@conn), class: "players") %>
         <%= select(f, :times, ["1": 1, "2": 2, "3": 3, "4": 4, "5": 5]) %>
         <span>times</span>
