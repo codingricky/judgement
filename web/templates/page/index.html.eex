@@ -13,6 +13,7 @@
 <div class="row-fluid">
 
   <div class='span5'>
+    <h3>Recent Results</h3>
     <ol id="results">
     <%= for result <- recent_results(@conn) do %>
       <li>
@@ -24,7 +25,7 @@
         <%= link to: player_path(@conn, :index), class: "player" do %>
           <%= img_tag(static_path(@conn, "/images/head.png")) %>
           <strong><%= result.loser.name %></strong>
-          <time><%= minutes_ago(result) %> minutes ago</time>
+          <time><%= time_ago_in_words(result.inserted_at) %> ago</time>
         <% end %>
       </li>
     <% end %>

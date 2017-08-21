@@ -20,7 +20,7 @@ defmodule Judgement.Mixfile do
   def application do
     [
       mod: {Judgement, []},
-      extra_applications: [:logger, :oauth2]
+      extra_applications: [:logger, :oauth2, :phoenix_html_simplified_helpers]
     ]
   end
 
@@ -43,7 +43,8 @@ defmodule Judgement.Mixfile do
       {:cowboy, "~> 1.0"},
       {:elo, "~> 0.1.0"},
       {:ex_machina, "~> 2.0", only: :test},
-      {:oauth2, "~> 0.9"}      
+      {:oauth2, "~> 0.9"},
+      {:phoenix_html_simplified_helpers, "~> 1.3.2"}  
     ]
   end
 
