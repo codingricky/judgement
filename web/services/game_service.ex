@@ -25,19 +25,54 @@ defmodule Judgement.GameService do
       |> Repo.preload(:rating)
     end
 
-    def create_result(winner, loser, times) do
-      if (times > 0) do 
-        create_result(winner, loser)        
-        create_result(winner, loser, times - 1) 
+    def create_result(winner, loser, times \\ 1) do
+      winner_rating_before = get_rating(winner).value
+      loser_rating_before = get_rating(loser).value
+      
+      do_create_result(winner, loser, times)
+
+      winner_rating_after = get_rating(winner).value
+      loser_rating_after = get_rating(loser).value
+
+      message = compose_message(winner.name, winner_rating_before, winner_rating_after, loser.name, loser_rating_before, loser_rating_after, times)
+      if  Mix.env != :test do
+        channel = "tabletennis-testing"
+        Slack.Web.Chat.post_message(channel, message)
       end
     end
   
-    def create_result(winner, loser) do
+    defp compose_message(winner, winner_rating_before, winner_rating_after, loser, loser_rating_before, loser_rating_after, times) do
+      ":table_tennis_paddle_and_ball: #{message(winner, winner_rating_before, winner_rating_after)} defeats #{message(loser, loser_rating_before, loser_rating_after)} #{multipler(times)}" 
+    end
+
+    defp message(name, rating_before, rating_after) do
+      "*#{name}* (~#{rating_before}~) - (#{rating_after})"
+    end
+
+    defp multipler(times) do
+      if times > 1 do
+        "#{times} times"
+      else
+        ""
+      end 
+    end
+    
+    defp do_create_result(winner, loser, 0) do
+    end 
+
+    defp do_create_result(winner, loser, times) do 
       winner_rating = Rating |> Repo.get(winner.rating.id)
       winner_rating_before = winner_rating.value
       loser_rating = Rating |> Repo.get(loser.rating.id)      
       loser_rating_before = loser_rating.value
       {winner_rating_after, loser_rating_after} = Elo.rate(winner_rating_before, loser_rating_before, :win, k_factor: 15, round: :down)
+
+      Ecto.Changeset.change(winner.rating, %{value: winner_rating_after})
+        |> Repo.update
+
+      Ecto.Changeset.change(loser.rating, %{value: loser_rating_after})
+        |> Repo.update
+
       %Result{winner: winner, 
               loser: loser,
               winner_rating_before: winner_rating_before,
@@ -46,11 +81,11 @@ defmodule Judgement.GameService do
               loser_rating_after: loser_rating_after}
               |> Repo.insert
 
-      Ecto.Changeset.change(winner.rating, %{value: winner_rating_after})
-        |> Repo.update
+        do_create_result(winner, loser, times - 1)
+    end
 
-      Ecto.Changeset.change(loser.rating, %{value: loser_rating_after})
-        |> Repo.update
+    defp get_rating(player) do
+        Rating |> Repo.get(player.rating.id)
     end
 
     def undo_last_result() do

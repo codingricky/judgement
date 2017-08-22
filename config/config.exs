@@ -27,6 +27,9 @@ config :judgement, Google,
   client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
   redirect_uri: "http://localhost:4000/auth/google/callback"
 
+config :slack, api_token: System.get_env("SLACK_API_TOKEN")
+
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
