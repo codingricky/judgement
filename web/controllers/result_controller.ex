@@ -8,9 +8,6 @@ defmodule Judgement.ResultController do
     alias Judgement.Repo
     alias Judgement.GameService
 
-    def full_rankings(conn, _params) do 
-        end
-
     def new(conn, _params) do
         conn
         |> get_player_list
@@ -31,6 +28,11 @@ defmodule Judgement.ResultController do
             conn
             |> redirect
         end
+    end
+
+    def full_rankings(conn, _params) do
+        leaderboard = GameService.leaderboard
+        render conn, "full_rankings.html", leaderboard: leaderboard
     end
 
     defp redirect(conn) do
