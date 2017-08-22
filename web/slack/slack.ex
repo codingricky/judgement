@@ -28,6 +28,7 @@ defmodule SlackRtm do
   def handle_event(message = %{type: "message"}, slack, state) do
     cond do 
         regex? message.text, ~r/help/ -> help(message, slack)
+        regex? message.text, ~r/show full/ -> show_full(message, slack)
         regex? message.text, ~r/show/ -> show(message, slack)
         regex? message.text, @defeated_txt -> defeated(message, slack)
         true -> store_quote(message, slack)
@@ -36,19 +37,23 @@ defmodule SlackRtm do
   end
   def handle_event(_, _, state), do: {:ok, state}
 
-  def regex?(string, expression) do
+  defp regex?(string, expression) do
     String.match?(string, expression)
   end
 
-  def help(message, slack) do
+  defp help(message, slack) do
     send_message(@help_message, message.channel, slack)
   end
 
-  def show(message, slack) do
+  defp show_full(message, slack) do
+    send_message(SlackService.show_full, message.channel, slack)
+  end
+
+  defp show(message, slack) do
     send_message(SlackService.show, message.channel, slack)
   end
 
-  def defeated(message, _slack) do
+  defp defeated(message, _slack) do
     case Regex.named_captures(@defeated_txt, message.text) do
       %{"winner" => winner, "loser" => loser, "times" => ""} -> SlackService.create_result(winner, loser)
       %{"winner" => winner, "loser" => loser, "times" => times} -> SlackService.create_result(winner, loser, String.to_integer(times))
