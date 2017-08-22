@@ -12,9 +12,6 @@ defmodule Judgement.ResultView do
     def show_flash(conn) do
         get_flash(conn) |> flash_msg
     end
-    
-    def flash_msg(_) do 
-    end
 
     def flash_msg(%{"info" => msg}) do
     ~E"<div class='alert alert-info'><%= msg %></div>"
@@ -24,10 +21,13 @@ defmodule Judgement.ResultView do
     ~E"<div class='alert alert-danger'><%= msg %></div>"
     end
 
+    def flash_msg(_) do 
+    end
+
     def streak(player) do
         Player.find_by_id(player.player_id)
             |> Result.last_n(10)
-            |> Enum.map &(convert_to_char(&1, player)) 
+            |> Enum.map(&(convert_to_char(&1, player)))
     end
 
     def convert_to_char(result, player) do

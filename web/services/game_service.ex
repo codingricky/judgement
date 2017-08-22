@@ -115,6 +115,7 @@ defmodule Judgement.GameService do
         |> Repo.all
         |> Repo.preload(:rating)
         |> Enum.filter(&(Player.is_active?(&1)))
+        |> Enum.sort(&(&1.rating.value > &2.rating.value))
         |> Enum.with_index(1)        
         |> convert_players_to_leaderboard_map
     end
@@ -123,6 +124,7 @@ defmodule Judgement.GameService do
       Player
         |> Repo.all
         |> Repo.preload(:rating)
+        |> Enum.sort(&(&1.rating.value > &2.rating.value))
         |> Enum.with_index(1)
     end
 

@@ -46,7 +46,7 @@ defmodule Judgement.Result do
   end
 
   def last_n(player, n) do
-        results = all_results_sorted(player)    
+    results = all_results_sorted(player)    
     case length(results) do 
         x when x > n -> Enum.slice(results, 1..n)
         x -> Enum.slice(results, 1..x)

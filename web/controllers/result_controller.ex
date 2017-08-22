@@ -4,8 +4,6 @@ defmodule Judgement.ResultController do
     use Judgement.Web, :controller
     
     alias Judgement.Player
-    alias Judgement.Result
-    alias Judgement.Repo
     alias Judgement.GameService
 
     def new(conn, _params) do
@@ -45,7 +43,7 @@ defmodule Judgement.ResultController do
 
     defp get_player_list(conn) do
         player_list = Player.all
-            |> Enum.map &({&1.name, &1.name})
+            |> Enum.map(&({&1.name, &1.name}))
 
         assign(conn, :player_list, player_list)
     end

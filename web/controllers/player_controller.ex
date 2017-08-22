@@ -27,7 +27,7 @@ defmodule Judgement.PlayerController do
         render conn, "edit.html", changeset: changeset, id: id       
     end
 
-    def create(conn, %{"player" => %{"name" => name, "email" => email, "color" => color}}) do
+    def create(conn, %{"player" => %{"name" => name, "email" => email, "color" => _color}}) do
         case GameService.create_player(name, email) do
             {:ok, _} -> redirect(conn)
             {:error, changeset} -> render_page(conn, changeset)
