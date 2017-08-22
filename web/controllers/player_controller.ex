@@ -27,15 +27,15 @@ defmodule Judgement.PlayerController do
         render conn, "edit.html", changeset: changeset, id: id       
     end
 
-    def create(conn, %{"player" => %{"name" => name, "email" => email}}) do
+    def create(conn, %{"player" => %{"name" => name, "email" => email, "color" => color}}) do
         case GameService.create_player(name, email) do
             {:ok, _} -> redirect(conn)
             {:error, changeset} -> render_page(conn, changeset)
         end
     end
 
-    def update(conn, %{"id" => id, "player" => %{"name" => name, "email" => email}}) do
-        changeset = Player.changeset(Player.find_by_id(id), %{name: name, email: email})
+    def update(conn, %{"id" => id, "player" => %{"name" => name, "email" => email, "color" => color}}) do
+        changeset = Player.changeset(Player.find_by_id(id), %{name: name, email: email, color: color})
                     |> Repo.update
 
         case changeset do

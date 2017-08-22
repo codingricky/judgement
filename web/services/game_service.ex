@@ -10,6 +10,11 @@ defmodule Judgement.GameService do
                           |> Repo.insert
     end
 
+    def create_player(name, email, color) do
+       Player.changeset(%Player{}, %{name: name, email: email, color: color, rating: %{}})
+                          |> Repo.insert
+    end
+
     def update_player(name, email) do
       Player.changeset(%Player{}, %{name: name, email: email})
                          |> Repo.update
@@ -93,6 +98,7 @@ defmodule Judgement.GameService do
                                       name: p.name,
                                       wins: Player.wins(p),
                                       losses: Player.losses(p),
+                                      color: p.color,
                                       total: Player.wins(p) + Player.losses(p),
                                       ratio: Player.ratio(p),
                                       streak: Player.streak(p)} end)

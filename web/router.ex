@@ -27,7 +27,8 @@ defmodule Judgement.Router do
     get "/", PageController, :index
     get "/undo", PageController, :undo    
     resources "/player", PlayerController
-    resources "/result", ResultController    
+    resources "/result", ResultController
+    get "/full_rankings", ResultController, :full_rankings
   end
 
   scope "/auth", Judgement do

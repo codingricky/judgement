@@ -8,6 +8,8 @@ defmodule Judgement.Player do
   schema "players" do
     field :name, :string
     field :email, :string
+    field :color, :string
+    
     has_one :rating, Rating, on_delete: :delete_all
 
     timestamps()
@@ -18,7 +20,7 @@ defmodule Judgement.Player do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :email])
+    |> cast(params, [:name, :email, :color])
     |> cast_assoc(:rating)    
     |> validate_required([:name, :email])
     |> unique_constraint(:email)

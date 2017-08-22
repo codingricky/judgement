@@ -34,7 +34,7 @@
   </div>
 
   <div class="span7">
-    <h4>Current Rankings of Active Players<sup>*</sup> |  <span><%= link "Full Rankings", to: "" %></span> </h4>
+    <h4>Current Rankings of Active Players<sup>*</sup> |  <span><%= link "Full Rankings", to: result_path(@conn, :full_rankings) %></span> </h4>
     <table>
         <thead>
         <tr>
@@ -65,7 +65,7 @@
       <td>
         <div>
           <svg height="20" width="20">
-            <circle cx="10" cy="10" r="5" stroke="black" stroke-width="1" fill="" />
+            <circle cx="10" cy="10" r="5" stroke="black" stroke-width="1" fill="<%= player[:color]%>" />
           </svg>
         </div>
       </td>

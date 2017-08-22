@@ -27,7 +27,7 @@
     <div class="control-group">
       <%= label f, :color, class: "control-label" %>
       <div class="controls">
-        <%= select(f, :color,  ["green": 1, "purple": 2, "red": 3, "yellow": 4, "black": 5, "pink": 6, "white": 7, "cyan": 8, "blue": 9]) %>
+        <%= select(f, :color,  ["green": "green", "purple": "purple", "red": "red", "yellow": "yellow", "black": "black", "pink": "pink", "white": "white", "cyan": "cyan", "blue": "blue"]) %>
       </div>
     </div>
   <div class="form-actions">

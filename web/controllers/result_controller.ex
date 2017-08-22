@@ -8,6 +8,9 @@ defmodule Judgement.ResultController do
     alias Judgement.Repo
     alias Judgement.GameService
 
+    def full_rankings(conn, _params) do 
+        end
+
     def new(conn, _params) do
         conn
         |> get_player_list
