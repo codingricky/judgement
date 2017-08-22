@@ -76,7 +76,7 @@
       <td><%= player[:total] %></td>
       <td><%= Number.Percentage.number_to_percentage(player[:ratio]) %></td>
       <td><%= player[:streak] %></td>
-      <td><span class="lastn"></span></td>
+      <td><span class="lastn"><%= streak(player) %></span></td>
 
      <% end %>
       </tbody>
