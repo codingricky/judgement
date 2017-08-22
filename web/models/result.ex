@@ -1,3 +1,5 @@
+require IEx
+
 defmodule Judgement.Result do
   use Judgement.Web, :model
   alias Judgement.Player

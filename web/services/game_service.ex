@@ -66,11 +66,28 @@ defmodule Judgement.GameService do
     end
 
     def leaderboard() do
+      all_players_with_index
+        |> convert_players_to_leaderboard_map
+    end
+
+    def active_leaderboard() do
+      Player
+        |> Repo.all
+        |> Repo.preload(:rating)
+        |> Enum.filter(&(Player.is_active?(&1)))
+        |> Enum.with_index(1)        
+        |> convert_players_to_leaderboard_map
+    end
+
+    def all_players_with_index() do
       Player
         |> Repo.all
         |> Repo.preload(:rating)
         |> Enum.with_index(1)
-        |> Enum.map(fn {p, index} -> %{rank: index, 
+    end
+
+    def convert_players_to_leaderboard_map(player) do
+      Enum.map(player, fn {p, index} -> %{rank: index, 
                                       player_id: p.id,
                                       points: p.rating.value, 
                                       name: p.name,

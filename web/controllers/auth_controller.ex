@@ -37,7 +37,6 @@ defmodule Judgement.AuthController do
       # If you need to make additional resource requests, you may want to store
       # the access token as well.
       conn
-      |> conn.assigns
       |> put_session(:current_user, user)
       |> put_session(:access_token, client.token.access_token)
       |> redirect(to: "/")

@@ -34,7 +34,7 @@
   </div>
 
   <div class="span7">
-    <h4>Current Rankings of Active Players<sup>*</sup> | <span><%= link "Daily Rankings", to: "" %></span> |  <span><%= link "Full Rankings", to: "" %></span> </h4>
+    <h4>Current Rankings of Active Players<sup>*</sup> |  <span><%= link "Full Rankings", to: "" %></span> </h4>
     <table>
         <thead>
         <tr>

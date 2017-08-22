@@ -5,7 +5,7 @@ defmodule Judgement.PageController do
   alias Judgement.GameService
 
   def index(conn, _params) do
-    leaderboard = GameService.leaderboard
+    leaderboard = GameService.active_leaderboard()
 
     conn
     |> assign(:recent_results, Result.recent)
