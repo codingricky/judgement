@@ -19,7 +19,9 @@ defmodule SlackRtm do
             *help*                                         this message
     """
 
-  def handle_connect(slack, state) do
+  @defeated_txt ~r/(?<winner>[A-Za-z]+) b (?<loser>[A-Za-z]+)+( )?(?<times>[1-5])?/
+
+  def handle_connect(_slack, state) do
     {:ok, state}
   end
 
@@ -27,7 +29,8 @@ defmodule SlackRtm do
     cond do 
         regex? message.text, ~r/help/ -> help(message, slack)
         regex? message.text, ~r/show/ -> show(message, slack)
-        Else -> store_quote(message, slack)
+        regex? message.text, @defeated_txt -> defeated(message, slack)
+        true -> store_quote(message, slack)
     end
     {:ok, state}
   end
@@ -43,6 +46,14 @@ defmodule SlackRtm do
 
   def show(message, slack) do
     send_message(SlackService.show, message.channel, slack)
+  end
+
+  def defeated(message, _slack) do
+    case Regex.named_captures(@defeated_txt, message.text) do
+      %{"winner" => winner, "loser" => loser, "times" => ""} -> SlackService.create_result(winner, loser)
+      %{"winner" => winner, "loser" => loser, "times" => times} -> SlackService.create_result(winner, loser, String.to_integer(times))
+      _ -> ""
+    end
   end
 
   def store_quote(message, slack) do

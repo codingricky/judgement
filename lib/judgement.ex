@@ -6,16 +6,31 @@ defmodule Judgement do
   def start(_type, _args) do
     import Supervisor.Spec
 
-    # Define workers and child supervisors to be supervised
-    children = [
+    # # Define workers and child supervisors to be supervised
+    # children = [
+    #   # Start the Ecto repository
+    #   supervisor(Judgement.Repo, []),
+    #   # Start the endpoint when the application starts
+    #   supervisor(Judgement.Endpoint, []),
+    #   # Start your own worker by calling: Judgement.Worker.start_link(arg1, arg2, arg3)
+    #   # worker(Judgement.Worker, [arg1, arg2, arg3]),
+    #   worker(Slack.Bot, [SlackRtm, [], System.get_env("SLACK_API_TOKEN")]),
+    # ]
+    children = 
+    if System.get_env("SLACK_API_TOKEN") do
+          [
       # Start the Ecto repository
       supervisor(Judgement.Repo, []),
       # Start the endpoint when the application starts
       supervisor(Judgement.Endpoint, []),
       # Start your own worker by calling: Judgement.Worker.start_link(arg1, arg2, arg3)
       # worker(Judgement.Worker, [arg1, arg2, arg3]),
-      # worker(Slack.Bot, [SlackRtm, [], System.get_env("SLACK_API_TOKEN")]),
+      worker(Slack.Bot, [SlackRtm, [], System.get_env("SLACK_API_TOKEN")]),
     ]
+    else
+          [supervisor(Judgement.Repo, []),
+           supervisor(Judgement.Endpoint, [])]
+    end
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

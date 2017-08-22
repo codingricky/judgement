@@ -92,6 +92,14 @@ defmodule Judgement.Player do
     |> Repo.preload(:rating)
   end
 
+  def with_name(name) do
+    search = "#{name}%"
+      Repo.one(from p in Judgement.Player,
+              where: ilike(p.name, ^search),
+              select: p)
+      |> Repo.preload(:rating)
+  end
+
   def h2h(player, opponent) do
     %{wins: Result.no_of_wins_against(player, opponent), 
       losses: Result.no_of_losses_against(player, opponent),
