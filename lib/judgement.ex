@@ -14,7 +14,7 @@ defmodule Judgement do
       supervisor(Judgement.Endpoint, []),
       # Start your own worker by calling: Judgement.Worker.start_link(arg1, arg2, arg3)
       # worker(Judgement.Worker, [arg1, arg2, arg3]),
-      worker(Slack.Bot, [SlackRtm, [], System.get_env("SLACK_API_TOKEN")]),
+      # worker(Slack.Bot, [SlackRtm, [], System.get_env("SLACK_API_TOKEN")]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
