@@ -21,6 +21,7 @@ defmodule SlackRtm do
 
   @defeated_txt ~r/(?<winner>[A-Za-z]+) b (?<loser>[A-Za-z]+)( )?(?<times>[1-5])?/
   @h2h_txt ~r/(?<player_1>[A-Za-z]+) h2h (?<player_2>[A-Za-z]+)/
+  @lookup_txt ~r/lookup (?<player>[A-Za-z]+)/
 
   def handle_connect(_slack, state) do
     {:ok, state}
@@ -30,6 +31,7 @@ defmodule SlackRtm do
     cond do 
         regex? message.text, @h2h_txt -> h2h(message, slack)
         regex? message.text, @defeated_txt -> defeated(message, slack)
+        regex? message.text, @lookup_txt -> lookup(message, slack)
         regex? message.text, ~r/help/ -> help(message, slack)
         regex? message.text, ~r/show full/ -> show_full(message, slack)
         regex? message.text, ~r/[(reverse show)|(woes)]/ -> reverse_show(message, slack)
@@ -60,6 +62,13 @@ defmodule SlackRtm do
     send_message(SlackService.reverse_show, message.channel, slack)
   end
 
+  defp lookup(message, _slack) do
+    case Regex.named_captures(@lookup_txt, message.text) do
+      %{"player" => player} -> SlackService.lookup(player, message.channel)
+      _ -> ""
+    end  
+  end
+
   defp defeated(message, _slack) do
     case Regex.named_captures(@defeated_txt, message.text) do
       %{"winner" => winner, "loser" => loser, "times" => ""} -> SlackService.create_result(winner, loser)
@@ -75,7 +84,7 @@ defmodule SlackRtm do
     end
   end
 
-  def store_quote(message, slack) do
+  def store_quote(_message, _slack) do
     
   end
 

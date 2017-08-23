@@ -16,7 +16,7 @@ defmodule Judgement.PageView do
   def streak(player) do
     Player.find_by_id(player.player_id)
       |> Result.last_n(10)
-      |> Enum.map &(convert_to_char(&1, player)) 
+      |> Enum.map(&(convert_to_char(&1, player))) 
   end
 
   def convert_to_char(result, player) do

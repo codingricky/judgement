@@ -3,7 +3,6 @@ require IEx
 defmodule Judgement.Result do
   use Judgement.Web, :model
   alias Judgement.Player
-  alias Judgement.Rating
   alias Judgement.Repo
 
   schema "results" do
@@ -63,8 +62,8 @@ defmodule Judgement.Result do
   def all_results_sorted(player) do
     all_wins_sorted(player) ++ all_losses_sorted(player)
             |> Repo.preload(:winner) 
-        |> Repo.preload(:loser)
-    |> Enum.sort(&(&1.id > &2.id))
+            |> Repo.preload(:loser)
+            |> Enum.sort(&(&1.id > &2.id))
   end
 
   def all_losses_sorted(player) do
@@ -140,4 +139,7 @@ defmodule Judgement.Result do
             select: count(r.id))
   end
 
+  def day(result) do
+    Date.day_of_week(NaiveDateTime.to_date(result.inserted_at))
+  end
 end

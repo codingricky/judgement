@@ -9,7 +9,7 @@ defmodule Judgement.PageController do
 
     conn
     |> assign(:recent_results, Result.recent)
-    |> render "index.html", leaderboard: leaderboard
+    |> render("index.html", leaderboard: leaderboard)
   end
 
   def undo(conn, _params) do

@@ -28,8 +28,8 @@ defmodule Judgement.Player do
   end
 
   def first do
-    [first_element, _] = all()
-    first_element 
+    [first_element | _] = all()
+    first_element
   end
 
   def all do
@@ -122,5 +122,43 @@ defmodule Judgement.Player do
                           |> NaiveDateTime.add(-1 * day_in_seconds * 20, :second)
 
     no_of_recent_games(player, twenty_days_ago) >= 10
+  end
+
+  def winning_ratio_by_day(player) do
+    daily_results = Result.all_results_sorted(player)
+              |> Enum.map(&(%{day: Result.day(&1), 
+              win: count_win(&1, player), 
+              loss: count_loss(&1, player)}))
+
+    1..7
+      |> Enum.map(&(%{day: &1, wins: count_wins_for_day(daily_results, &1), 
+                              losses: count_losses_for_day(daily_results, &1), 
+                              ratio: winning_ratio_by_day(daily_results, &1)}))
+  end
+
+  defp total_games_for_day(daily_results, day) do
+    count_wins_for_day(daily_results, day) + count_losses_for_day(daily_results, day)
+  end
+
+  defp winning_ratio_by_day(daily_results, day) do
+    wins = count_wins_for_day(daily_results, day)
+    total = total_games_for_day(daily_results, day)
+    if total == 0, do: 0, else: wins/total * 100
+  end
+
+  defp count_wins_for_day(daily_results, day) do
+    Enum.reduce(daily_results, 0, fn(result, acc) -> if result[:day] == day, do: acc + result[:win], else: acc end)
+  end
+
+  defp count_losses_for_day(daily_results, day) do
+    Enum.reduce(daily_results, 0, fn(result, acc) -> if result[:day] == day, do: acc + result[:loss], else: acc end)
+  end
+
+  defp count_win(result, player) do
+    if result.winner.id == player.id, do: 1, else: 0
+  end
+
+  defp count_loss(result, player) do
+    if result.loser.id == player.id, do: 1, else: 0
   end
 end

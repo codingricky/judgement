@@ -3,7 +3,6 @@ defmodule Judgement.GameService do
     alias Judgement.Player
     alias Judgement.Rating
     alias Judgement.Result
-    alias Judgement.ResultRepo
 
     def create_player(name, email) do
        Player.changeset(%Player{}, %{name: name, email: email, rating: %{}})
@@ -57,7 +56,7 @@ defmodule Judgement.GameService do
       end 
     end
     
-    defp do_create_result(winner, loser, 0) do
+    defp do_create_result(_winner, _loser, 0) do
     end 
 
     defp do_create_result(winner, loser, times) do 
@@ -106,7 +105,7 @@ defmodule Judgement.GameService do
     end
 
     def leaderboard() do
-      all_players_with_index
+      all_players_with_index()
         |> convert_players_to_leaderboard_map
     end
 

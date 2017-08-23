@@ -1,6 +1,7 @@
 defmodule Judgement.SlackService do
     alias Judgement.GameService
     alias Judgement.Player
+    alias Judgement.Result
 
     def show do
         GameService.active_leaderboard
@@ -35,5 +36,43 @@ defmodule Judgement.SlackService do
         winner_player = Player.with_name(winner)
         loser_player = Player.with_name(loser)
         GameService.create_result(winner_player, loser_player, times)
+    end
+
+    def lookup(player_name, channel) do
+        player = Player.with_name(player_name)
+        winning_ratio = Player.winning_ratio_by_day(player)
+        last_10_games = Result.last_n(player, 10)
+                        |> Enum.map_join("\n", &("#{&1.winner.name} defeated #{&1.loser.name}"))
+
+        h2h_record = Player.all
+                        |> Enum.filter(&(player.id != &1.id))
+                        |> Enum.sort(&(&1.name < &2.name))
+                        |> Enum.map_join("\n", &(h2h_message(player, &1)))
+
+        attachments = [%{"color": "green", 
+                         "title": player.name,
+                         "fields": [create_field("wins", Player.wins(player), true),
+                                    create_field("losses", Player.losses(player), true),
+                                    create_field("winning %", Number.Percentage.number_to_percentage(Player.ratio(player), precision: 0), true),
+                                    create_field("winning % by day", winning_percent_by_day(winning_ratio), false),
+                                    create_field("Last 10 Results", last_10_games, false),
+                                    create_field("h2h", h2h_record, false)]}]
+        
+        Slack.Web.Chat.post_message(channel, "", %{attachments: Poison.encode!(attachments)})
+    end
+
+    defp h2h_message(player, opponent) do
+        h2h_record = Player.h2h(player, opponent)
+        "h2h with #{opponent.name} wins #{h2h_record[:wins]} losses #{h2h_record[:losses]} #{Number.Percentage.number_to_percentage(h2h_record[:ratio], precision: 0)}"
+    end
+
+    defp winning_percent_by_day(winning_ratio) do
+        days = %{1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", 7 => "Sunday"}
+        winning_ratio
+            |> Enum.map_join("\n", &("#{days[&1[:day]]} - #{Number.Percentage.number_to_percentage(&1[:ratio], precision: 0)}"))
+    end
+
+    defp create_field(title, value, short) do
+        %{"title": title, "value": value, "short": short}
     end
 end
