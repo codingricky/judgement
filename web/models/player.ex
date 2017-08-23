@@ -101,10 +101,19 @@ defmodule Judgement.Player do
   end
 
   def h2h(player, opponent) do
-    %{wins: Result.no_of_wins_against(player, opponent), 
-      losses: Result.no_of_losses_against(player, opponent),
+    wins = Result.no_of_wins_against(player, opponent)
+    losses = Result.no_of_losses_against(player, opponent)
+    total = wins + losses
+    ratio = case total do
+      0 ->  0
+      _ -> wins/total * 100
+    end
+
+    %{wins: wins, 
+      losses: losses,
       opponent: opponent,
-      rating: opponent.rating.value}
+      rating: opponent.rating.value,
+      ratio: ratio}
   end
 
   def is_active?(player) do
