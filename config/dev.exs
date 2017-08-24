@@ -55,5 +55,11 @@ config :judgement, Judgement.Repo,
   hostname: "localhost",
   pool_size: 10
 
+  # username: System.get_env("DB_ENV_POSTGRES_USER"),
+  # password: System.get_env("DB_ENV_POSTGRES_PASSWORD"),
+  # hostname: System.get_env("DB_ENV_POSTGRES_HOST"),
+  # database: "phoenix_docker_dev",
+  # pool_size: 10
+
 config :oauth2, debug: true
   
