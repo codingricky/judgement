@@ -161,4 +161,10 @@ defmodule Judgement.Player do
   defp count_loss(result, player) do
     if result.loser.id == player.id, do: 1, else: 0
   end
+
+  def update_colour(player, colour) do
+    
+      Player.change(player, %{color: colour})
+        |> Repo.update!
+  end
 end

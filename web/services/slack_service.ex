@@ -2,6 +2,7 @@ defmodule Judgement.SlackService do
     alias Judgement.GameService
     alias Judgement.Player
     alias Judgement.Result
+    alias Judgement.Repo
 
     def show do
         GameService.active_leaderboard
@@ -105,5 +106,14 @@ defmodule Judgement.SlackService do
 
     defp filter_out_player(players, player) do
         Enum.filter(players, &(player.id != &1.id))
+    end
+
+    def change_colour(player, colour) do
+        case Player.with_name(player)
+         |> Player.changeset(%{color: colour})
+         |> Repo.update do
+             {:ok, _} -> "Updated #{player}'s colour to #{colour}"
+             _ -> "Could not update colour. Please choose one of the following colours [green, purple, red, yellow, black, pink, white, cyan,blue]"
+         end
     end
 end

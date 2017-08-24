@@ -52,11 +52,11 @@ defmodule Judgement.GameServiceTest do
         GameService.create_result(winner, loser, 5)
         # TODO update asserts
 
-        # saved_winner = GameService.find_player(winner.email)
-        # assert 1038 == saved_winner.rating.value
+        saved_winner = GameService.find_player(winner.email)
+        assert 1038 == saved_winner.rating.value
 
-        # saved_loser = GameService.find_player(loser.email)
-        # assert 956 == saved_loser.rating.value
+        saved_loser = GameService.find_player(loser.email)
+        assert 956 == saved_loser.rating.value
     end
 
     test "undos the last result" do

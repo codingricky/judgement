@@ -7,7 +7,6 @@ defmodule SlackRtm do
 
   @help_message """
                 *show*                                    shows the leaderboard
-            *show colours*                            shows the the colours
             *show full*                                    shows the full leaderboard
             *reverse show*                            shows the leaderboard in reverse
             *[winner] defeats [loser] n [times]*           creates a result
@@ -23,6 +22,7 @@ defmodule SlackRtm do
   @h2h_txt ~r/(?<player_1>[A-Za-z]+) h2h (?<player_2>[A-Za-z]+)/
   @lookup_txt ~r/lookup (?<player>[A-Za-z]+)/
   @mine_txt ~r/who does (?<player>[A-Za-z]+) mine/
+  @change_colours_txt ~r/change (?<player>[A-Za-z]+)'s colour to (?<colour>[A-Za-z]+)/
 
   def handle_connect(_slack, state) do
     IO.puts "connected"
@@ -35,14 +35,16 @@ defmodule SlackRtm do
         regex? message.text, @defeated_txt -> defeated(message, slack)
         regex? message.text, @lookup_txt -> lookup(message, slack)
         regex? message.text, @mine_txt -> mine(message, slack)
+        regex? message.text, @change_colours_txt -> change_colour(message, slack)
         regex? message.text, ~r/help/ -> help(message, slack)
+        regex? message.text, ~r/^show$/ -> show(message, slack)
         regex? message.text, ~r/show full/ -> show_full(message, slack)
-        regex? message.text, ~r/[(reverse show)|(woes)]/ -> reverse_show(message, slack)
-        regex? message.text, ~r/show/ -> show(message, slack)
+        regex? message.text, ~r/(^reverse show$)|(^woes$)/ -> reverse_show(message, slack)
         true -> store_quote(message, slack)
     end
     {:ok, state}
   end
+
   def handle_event(_, _, state), do: {:ok, state}
 
   defp regex?(string, expression) do
@@ -90,6 +92,13 @@ defmodule SlackRtm do
   defp mine(message, slack) do
     case Regex.named_captures(@mine_txt, message.text) do
       %{"player" => player} -> send_message(SlackService.who_does_this_player_mine(player), message.channel, slack)
+      _ -> ""
+    end
+  end
+
+  defp change_colour(message, slack) do
+    case Regex.named_captures(@change_colours_txt, message.text) do
+      %{"player" => player, "colour" => colour} -> send_message(SlackService.change_colour(player, colour), message.channel, slack)
       _ -> ""
     end
   end
