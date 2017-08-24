@@ -3,6 +3,9 @@ defmodule Judgement.SlackService do
     alias Judgement.Player
     alias Judgement.Result
     alias Judgement.Repo
+    alias Judgement.Quote
+    
+    @days %{1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", 7 => "Sunday"}
 
     def show do
         GameService.active_leaderboard
@@ -68,9 +71,8 @@ defmodule Judgement.SlackService do
     end
 
     defp winning_percent_by_day(winning_ratio) do
-        days = %{1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", 7 => "Sunday"}
         winning_ratio
-            |> Enum.map_join("\n", &("#{days[&1[:day]]} - #{Number.Percentage.number_to_percentage(&1[:ratio], precision: 0)}"))
+            |> Enum.map_join("\n", &("#{@days[&1[:day]]} - #{Number.Percentage.number_to_percentage(&1[:ratio], precision: 0)}"))
     end
 
     defp create_field(title, value, short) do
@@ -115,5 +117,19 @@ defmodule Judgement.SlackService do
              {:ok, _} -> "Updated #{player}'s colour to #{colour}"
              _ -> "Could not update colour. Please choose one of the following colours [green, purple, red, yellow, black, pink, white, cyan,blue]"
          end
+    end
+
+    def best_day_to_play(player) do
+        best_day = Player.with_name(player)
+                        |> Player.winning_ratio_by_day()
+                        |> Enum.reduce(fn(day, acc) -> if acc[:ratio] < day[:ratio], do: acc, else: day end)
+        @days[best_day[:day]]
+    end
+
+    def store_quote(message, slack_id) do
+        player = Player.find_by_slack_id(slack_id)
+        if player && !Quote.find_by_quote_and_player_id(message, player.id) do
+            GameService.create_quote(message, player.id)
+        end
     end
 end

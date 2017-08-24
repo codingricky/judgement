@@ -92,6 +92,11 @@ defmodule Judgement.Player do
     |> Repo.preload(:rating)
   end
 
+  def find_by_slack_id(slack_id) do
+    Repo.get_by(Judgement.Player, slack_id: slack_id)
+    |> Repo.preload(:rating)
+  end
+
   def with_name(name) do
     search = "#{name}%"
       Repo.one(from p in Judgement.Player,
@@ -135,7 +140,7 @@ defmodule Judgement.Player do
                               losses: count_losses_for_day(daily_results, &1), 
                               ratio: winning_ratio_by_day(daily_results, &1)}))
   end
-
+            
   defp total_games_for_day(daily_results, day) do
     count_wins_for_day(daily_results, day) + count_losses_for_day(daily_results, day)
   end
@@ -160,11 +165,5 @@ defmodule Judgement.Player do
 
   defp count_loss(result, player) do
     if result.loser.id == player.id, do: 1, else: 0
-  end
-
-  def update_colour(player, colour) do
-    
-      Player.change(player, %{color: colour})
-        |> Repo.update!
   end
 end

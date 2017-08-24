@@ -23,6 +23,7 @@ defmodule SlackRtm do
   @lookup_txt ~r/lookup (?<player>[A-Za-z]+)/
   @mine_txt ~r/who does (?<player>[A-Za-z]+) mine/
   @change_colours_txt ~r/change (?<player>[A-Za-z]+)'s colour to (?<colour>[A-Za-z]+)/
+  @best_day_to_play_txt ~r/what's the best day to play (?<player>[A-Za-z]+)?/
 
   def handle_connect(_slack, state) do
     IO.puts "connected"
@@ -36,6 +37,7 @@ defmodule SlackRtm do
         regex? message.text, @lookup_txt -> lookup(message, slack)
         regex? message.text, @mine_txt -> mine(message, slack)
         regex? message.text, @change_colours_txt -> change_colour(message, slack)
+        regex? message.text, @best_day_to_play_txt -> best_day_to_play(message, slack)        
         regex? message.text, ~r/help/ -> help(message, slack)
         regex? message.text, ~r/^show$/ -> show(message, slack)
         regex? message.text, ~r/show full/ -> show_full(message, slack)
@@ -103,8 +105,15 @@ defmodule SlackRtm do
     end
   end
 
-  def store_quote(_message, _slack) do
-    
+  defp best_day_to_play(message, slack) do
+    case Regex.named_captures(@best_day_to_play_txt, message.text) do
+      %{"player" => player} -> send_message("The best day to play #{player} is #{SlackService.best_day_to_play(player)}", message.channel, slack)
+      _ -> ""
+    end
+  end
+
+  def store_quote(message, slack) do
+    SlackService.store_quote(message, slack.me)
   end
 
   def handle_info({:message, _text, _channel}, _slack, state) do

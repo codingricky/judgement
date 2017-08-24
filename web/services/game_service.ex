@@ -3,6 +3,13 @@ defmodule Judgement.GameService do
     alias Judgement.Player
     alias Judgement.Rating
     alias Judgement.Result
+    alias Judgement.Quote
+
+    def create_quote(message, player_id) do
+      player = Player.find_by_id(player_id)
+      Quote.changeset(%Quote{}, %{quote: message, player: player})
+                          |> Repo.insert
+    end
 
     def create_player(name, email) do
        Player.changeset(%Player{}, %{name: name, email: email, rating: %{}})
