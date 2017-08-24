@@ -5,7 +5,7 @@ defmodule Judgement.UserSocket do
   # channel "room:*", Judgement.RoomChannel
 
   ## Transports
-  transport :websocket, Phoenix.Transports.WebSocket
+  transport :websocket, Phoenix.Transports.WebSocket,
     timeout: 45_000
   
   # transport :longpoll, Phoenix.Transports.LongPoll
