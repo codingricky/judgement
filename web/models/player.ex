@@ -9,6 +9,7 @@ defmodule Judgement.Player do
     field :name, :string
     field :email, :string
     field :color, :string
+    field :slack_id, :string
     
     has_one :rating, Rating, on_delete: :delete_all
 

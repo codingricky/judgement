@@ -39,7 +39,13 @@ defmodule Judgement.SlackService do
     def create_result(winner, loser, times \\ 1) do
         winner_player = Player.with_name(winner)
         loser_player = Player.with_name(loser)
-        GameService.create_result(winner_player, loser_player, times)
+        if winner_player && loser_player do
+            GameService.create_result(winner_player, loser_player, times)
+            {:ok}
+        else 
+            message = if winner_player, do: "loser not found", else: "winner not found"
+            {:error, message}            
+        end
     end
 
     def lookup(player_name, channel) do

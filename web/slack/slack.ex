@@ -31,18 +31,24 @@ defmodule SlackRtm do
   end
 
   def handle_event(message = %{type: "message"}, slack, state) do
-    cond do 
-        regex? message.text, @h2h_txt -> h2h(message, slack)
-        regex? message.text, @defeated_txt -> defeated(message, slack)
-        regex? message.text, @lookup_txt -> lookup(message, slack)
-        regex? message.text, @mine_txt -> mine(message, slack)
-        regex? message.text, @change_colours_txt -> change_colour(message, slack)
-        regex? message.text, @best_day_to_play_txt -> best_day_to_play(message, slack)        
-        regex? message.text, ~r/help/ -> help(message, slack)
-        regex? message.text, ~r/^show$/ -> show(message, slack)
-        regex? message.text, ~r/show full/ -> show_full(message, slack)
-        regex? message.text, ~r/(^reverse show$)|(^woes$)/ -> reverse_show(message, slack)
-        true -> store_quote(message, slack)
+    try do
+      cond do 
+          regex? message.text, @h2h_txt -> h2h(message, slack)
+          regex? message.text, @defeated_txt -> defeated(message, slack)
+          regex? message.text, @lookup_txt -> lookup(message, slack)
+          regex? message.text, @mine_txt -> mine(message, slack)
+          regex? message.text, @change_colours_txt -> change_colour(message, slack)
+          regex? message.text, @best_day_to_play_txt -> best_day_to_play(message, slack)        
+          regex? message.text, ~r/help/ -> help(message, slack)
+          regex? message.text, ~r/^show$/ -> show(message, slack)
+          regex? message.text, ~r/show full/ -> show_full(message, slack)
+          regex? message.text, ~r/(^reverse show$)|(^woes$)/ -> reverse_show(message, slack)
+          true -> store_quote(message, slack)
+      end
+    catch
+      e -> IO.puts("Error occurred #{inspect(e)}")      
+    rescue
+      e -> IO.puts("Error occurred #{inspect(e)}")      
     end
     {:ok, state}
   end
@@ -76,11 +82,16 @@ defmodule SlackRtm do
     end  
   end
 
-  defp defeated(message, _slack) do
-    case Regex.named_captures(@defeated_txt, message.text) do
+  defp defeated(message, slack) do
+    result = case Regex.named_captures(@defeated_txt, message.text) do
       %{"winner" => winner, "loser" => loser, "times" => ""} -> SlackService.create_result(winner, loser)
       %{"winner" => winner, "loser" => loser, "times" => times} -> SlackService.create_result(winner, loser, String.to_integer(times))
-      _ -> ""
+      _ -> {:ok}
+    end
+
+    case result do
+      {:ok} -> {:ok}
+      {:error, error} -> send_message(error, message.channel, slack) 
     end
   end
 
@@ -113,7 +124,10 @@ defmodule SlackRtm do
   end
 
   def store_quote(message, slack) do
-    SlackService.store_quote(message, slack.me)
+    IO.puts "storing message=#{inspect(message)}"
+    if message.user do
+      SlackService.store_quote(message, message.user)      
+    end
   end
 
   def handle_info({:message, _text, _channel}, _slack, state) do
