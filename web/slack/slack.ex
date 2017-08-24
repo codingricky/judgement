@@ -22,8 +22,10 @@ defmodule SlackRtm do
   @defeated_txt ~r/(?<winner>[A-Za-z]+) b (?<loser>[A-Za-z]+)( )?(?<times>[1-5])?/
   @h2h_txt ~r/(?<player_1>[A-Za-z]+) h2h (?<player_2>[A-Za-z]+)/
   @lookup_txt ~r/lookup (?<player>[A-Za-z]+)/
+  @mine_txt ~r/who does (?<player>[A-Za-z]+) mine/
 
   def handle_connect(_slack, state) do
+    IO.puts "connected"
     {:ok, state}
   end
 
@@ -32,6 +34,7 @@ defmodule SlackRtm do
         regex? message.text, @h2h_txt -> h2h(message, slack)
         regex? message.text, @defeated_txt -> defeated(message, slack)
         regex? message.text, @lookup_txt -> lookup(message, slack)
+        regex? message.text, @mine_txt -> mine(message, slack)
         regex? message.text, ~r/help/ -> help(message, slack)
         regex? message.text, ~r/show full/ -> show_full(message, slack)
         regex? message.text, ~r/[(reverse show)|(woes)]/ -> reverse_show(message, slack)
@@ -80,6 +83,13 @@ defmodule SlackRtm do
   defp h2h(message, slack) do 
     case Regex.named_captures(@h2h_txt, message.text) do
       %{"player_1" => player_1, "player_2" => player_2} -> send_message(SlackService.h2h(player_1, player_2), message.channel, slack)
+      _ -> ""
+    end
+  end
+
+  defp mine(message, slack) do
+    case Regex.named_captures(@mine_txt, message.text) do
+      %{"player" => player} -> send_message(SlackService.who_does_this_player_mine(player), message.channel, slack)
       _ -> ""
     end
   end

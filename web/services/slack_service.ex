@@ -45,7 +45,7 @@ defmodule Judgement.SlackService do
                         |> Enum.map_join("\n", &("#{&1.winner.name} defeated #{&1.loser.name}"))
 
         h2h_record = Player.all
-                        |> Enum.filter(&(player.id != &1.id))
+                        |> filter_out_player(player)
                         |> Enum.sort(&(&1.name < &2.name))
                         |> Enum.map_join("\n", &(h2h_message(player, &1)))
 
@@ -74,5 +74,36 @@ defmodule Judgement.SlackService do
 
     defp create_field(title, value, short) do
         %{"title": title, "value": value, "short": short}
+    end
+
+    def who_does_this_player_mine(player_name) do
+        player = Player.with_name(player_name)
+
+        Result.all_results_sorted(player)
+            |> Enum.map(&(%{get_other_player_id(player, &1) =>  get_points_diff(player, &1)}))
+            |> Enum.reduce(%{}, fn(result_map, acc) -> merge_result_map(result_map, acc) end)
+            |> Enum.map(fn({key, value}) -> {key, value} end)
+            |> List.keysort(1)
+            |> Enum.map_join("\n", fn {k, v} -> "#{Player.find_by_id(k).name} *#{v} points*" end)
+    end
+
+    defp merge_result_map(result_map, acc) do
+        Map.merge(acc, result_map, fn(_k, v1, v2) -> v1 + v2 end)
+    end
+
+    defp get_other_player_id(player, result) do
+        if is_winner?(player, result), do: result.loser.id, else: result.winner.id 
+    end
+
+    defp get_points_diff(player, result) do
+        if is_winner?(player, result), do: result.winner_rating_after - result.winner_rating_before, else: result.loser_rating_after - result.loser_rating_before
+    end
+
+    defp is_winner?(player, result) do
+        result.winner.id == player.id
+    end
+
+    defp filter_out_player(players, player) do
+        Enum.filter(players, &(player.id != &1.id))
     end
 end
