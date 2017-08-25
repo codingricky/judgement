@@ -18,8 +18,8 @@ use Mix.Config
 #   cache_static_manifest: "priv/static/cache_manifest.json"
 
   config :judgement, ProjectName.Endpoint,
-  http: [port: {:system, "PORT"}, compress: true],
-  url: [scheme: "http", host: System.get_env("HOST"), port: {:system, "PORT"}],
+  http: [port: {:system, System.get_env("PORT")}, compress: true],
+  url: [scheme: "http", host: System.get_env("HOST"), port: {:system, System.get_env("PORT")}],
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
   code_reloader: false,
   cache_static_manifest: "priv/static/manifest.json",
