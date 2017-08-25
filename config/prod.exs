@@ -13,16 +13,9 @@ use Mix.Config
 # which you typically run after static files are built.
 config :judgement, Judgement.Endpoint,
   http: [:inet6, port: {:system, "PORT"}],
-  url: [scheme: "https", host: "phtt.herokuapp.com", port: 443],
+  url: [scheme: "http", host: "example.com", port: 80],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
-  cache_static_manifest: "priv/static/cache_manifest.json",
-  secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
-
-config :judgement, Judgement.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  url: System.get_env("DATABASE_URL"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
-  ssl: true
+  cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -68,3 +61,15 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
 # import_config "prod.secret.exs"
+
+config :judgement, Judgement.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  database: System.get_env("RDS_DB_NAME"),
+  username: System.get_env("RDS_USERNAME"),
+  password: System.get_env("RDS_PASSWORD"),
+  hostname: System.get_env("RDS_HOSTNAME"),
+  port: System.get_env("RDS_PORT") || 5432,
+  pool_size: 20,
+  ssl: true
+
+
