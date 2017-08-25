@@ -72,7 +72,7 @@ config :logger, level: :info
 
 config :judgement, Judgement.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: System.get_env("RDS_DB_NAME"),
+  database: judgement_prod,
   username: System.get_env("RDS_USERNAME"),
   password: System.get_env("RDS_PASSWORD"),
   hostname: System.get_env("RDS_HOSTNAME"),
