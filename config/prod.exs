@@ -19,7 +19,7 @@ use Mix.Config
 
 config :judgement, Judgement.Endpoint,
   http: [port: 4000],
-  debug_errors: true,
+  debug_errors: false,
   check_origin: false
 
 # Do not print debug messages in production
