@@ -17,14 +17,13 @@ use Mix.Config
 #   force_ssl: [rewrite_on: [:x_forwarded_proto]],
 #   cache_static_manifest: "priv/static/cache_manifest.json"
 
-  config :judgement, Judgment.Endpoint,
+config :judgement, Judgement.Endpoint,
   http: [port: 4000],
-  code_reloader: false,
-  cache_static_manifest: "priv/static/manifest.json",
-  server: true
+  debug_errors: true,
+  check_origin: false
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger, level: :debug
 
 # ## SSL Support
 #
@@ -63,6 +62,8 @@ config :logger, level: :info
 #
 #     config :judgement, Judgement.Endpoint, server: true
 #
+config :phoenix, :stacktrace_depth, 20
+config :oauth2, debug: true
 
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
