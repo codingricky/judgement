@@ -6,3 +6,7 @@ ecl_Crash.dump
 /uploads/files/*
 .git
 .gitignore
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+.git
+.gitignore

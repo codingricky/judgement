@@ -1,6 +1,6 @@
 # Set the Docker image you want to base your image off.
 # I chose this one because it has Elixir preinstalled.
-FROM trenpixster/elixir:1.4.4
+FROM elixir:1.5
 
 # Setup Node - Phoenix uses the Node library `brunch` to compile assets.
 # The official node instructions want you to pipe a script from the 
