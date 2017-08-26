@@ -17,6 +17,6 @@ defmodule SlackClient do
     end
 
     defp respond_to_slack? do
-        Application.get_env(:slack, :respond_to_slack) == "true"
+        Application.get_env(:slack, :respond_to_slack)
     end
 end

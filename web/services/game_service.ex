@@ -4,10 +4,12 @@ defmodule Judgement.GameService do
     alias Judgement.Rating
     alias Judgement.Result
     alias Judgement.Quote
+    require Logger
 
     def create_quote(message, player_id) do
       player = Player.find_by_id(player_id)
-      Quote.changeset(%Quote{}, %{quote: message, player: player})
+      Logger.info("saving #{inspect(message)} against #{inspect(player_id)}")
+      %Quote{quote: message, player: player}
                           |> Repo.insert
     end
 

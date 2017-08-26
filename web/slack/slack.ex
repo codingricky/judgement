@@ -32,7 +32,33 @@ defmodule SlackRtm do
   end
 
   def handle_event(message = %{type: "message"}, slack, state) do
-    try do
+    user = message[:user]
+    Logger.info "#{inspect(message)} from #{inspect(slack.me[:name])}"
+    is_bot = is_bot(user)
+    Logger.info "#{inspect(user)} is_bot=#{inspect(is_bot)}"
+    case is_bot(user) do 
+      true -> nil
+      false -> handle_message(message, slack)
+    end
+
+    {:ok, state}
+  end
+
+  def is_bot(user) do
+    if user == nil do 
+        true
+    else
+      case Slack.Web.Users.info(user) do
+        %{"user" => %{"is_bot" => is_bot}} -> is_bot
+        _ -> true
+      end 
+    end
+  end
+
+  def handle_event(_, _, state), do: {:ok, state}
+
+  defp handle_message(message, slack) do
+     try do
       cond do 
           regex? message.text, @h2h_txt -> h2h(message, slack)
           regex? message.text, @defeated_txt -> defeated(message, slack)
@@ -47,14 +73,11 @@ defmodule SlackRtm do
           true -> store_quote(message, slack)
       end
     catch
-      e -> Logger.error("Error occurred #{inspect(e)}")      
+      e -> Logger.error("Error occurred #{inspect(e)} #{inspect(Process.info(self(), :current_stacktrace))}")      
     rescue
-      e -> Logger.error("Error occurred #{inspect(e)}")      
+      e -> Logger.error("Error occurred #{inspect(e)} #{inspect(Process.info(self(), :current_stacktrace))}") 
     end
-    {:ok, state}
   end
-
-  def handle_event(_, _, state), do: {:ok, state}
 
   defp regex?(string, expression) do
     String.match?(string, expression)
@@ -137,7 +160,7 @@ defmodule SlackRtm do
   def store_quote(message, _slack) do
     Logger.info "storing message=#{inspect(message)}"
     if message.user do
-      SlackService.store_quote(message, message.user)      
+      SlackService.store_quote(message.text, message.user)      
     end
   end
 

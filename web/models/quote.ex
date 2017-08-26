@@ -4,6 +4,7 @@ defmodule Judgement.Quote do
   alias Judgement.Rating
   alias Judgement.Repo
   alias Judgement.Result
+  alias Judgement.Player
 
   schema "quotes" do
     field :quote, :string
@@ -22,7 +23,7 @@ defmodule Judgement.Quote do
     end
 
     def find_by_quote_and_player_id(message, player_id) do
-        Repo.get_by(Judgement.Quote, message: message, player_id: player_id)
+        Repo.get_by(Judgement.Quote, quote: message, player_id: player_id)
             |> Repo.preload(:player)
     end
 
