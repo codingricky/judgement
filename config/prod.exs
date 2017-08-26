@@ -77,4 +77,4 @@ config :judgement, Judgement.Repo,
   pool_size: 20,
   ssl: true
 
-
+config :slack, respond_to_slack: System.get_env("RESPOND_TO_SLACK") || false

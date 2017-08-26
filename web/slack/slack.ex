@@ -60,19 +60,19 @@ defmodule SlackRtm do
   end
 
   defp help(message, slack) do
-    send_message(@help_message, message.channel, slack)
+    SlackClient.send_message(@help_message, message.channel, slack)
   end
 
   defp show_full(message, slack) do
-    send_message(SlackService.show_full, message.channel, slack)
+    SlackClient.send_message(SlackService.show_full, message.channel, slack)
   end
 
   defp show(message, slack) do
-    send_message(SlackService.show, message.channel, slack)
+    SlackClient.send_message(SlackService.show, message.channel, slack)
   end
 
   defp reverse_show(message, slack) do
-    send_message(SlackService.reverse_show, message.channel, slack)
+    SlackClient.send_message(SlackService.reverse_show, message.channel, slack)
   end
 
   defp lookup(message, _slack) do
@@ -91,39 +91,39 @@ defmodule SlackRtm do
 
     case result do
       {:ok} -> {:ok}
-      {:error, error} -> send_message(error, message.channel, slack) 
+      {:error, error} -> SlackClient.send_message(error, message.channel, slack) 
     end
   end
 
   defp h2h(message, slack) do 
     case Regex.named_captures(@h2h_txt, message.text) do
-      %{"player_1" => player_1, "player_2" => player_2} -> send_message(SlackService.h2h(player_1, player_2), message.channel, slack)
+      %{"player_1" => player_1, "player_2" => player_2} -> SlackClient.send_message(SlackService.h2h(player_1, player_2), message.channel, slack)
       _ -> ""
     end
   end
 
   defp mine(message, slack) do
     case Regex.named_captures(@mine_txt, message.text) do
-      %{"player" => player} -> send_message(SlackService.who_does_this_player_mine(player), message.channel, slack)
+      %{"player" => player} -> SlackClient.send_message(SlackService.who_does_this_player_mine(player), message.channel, slack)
       _ -> ""
     end
   end
 
   defp change_colour(message, slack) do
     case Regex.named_captures(@change_colours_txt, message.text) do
-      %{"player" => player, "colour" => colour} -> send_message(SlackService.change_colour(player, colour), message.channel, slack)
+      %{"player" => player, "colour" => colour} -> SlackClient.send_message(SlackService.change_colour(player, colour), message.channel, slack)
       _ -> ""
     end
   end
 
   defp best_day_to_play(message, slack) do
     case Regex.named_captures(@best_day_to_play_txt, message.text) do
-      %{"player" => player} -> send_message("The best day to play #{player} is #{SlackService.best_day_to_play(player)}", message.channel, slack)
+      %{"player" => player} -> SlackClient.send_message("The best day to play #{player} is #{SlackService.best_day_to_play(player)}", message.channel, slack)
       _ -> ""
     end
   end
 
-  def store_quote(message, slack) do
+  def store_quote(message, _slack) do
     IO.puts "storing message=#{inspect(message)}"
     if message.user do
       SlackService.store_quote(message, message.user)      

@@ -17,3 +17,5 @@ config :judgement, Judgement.Repo,
   database: "judgement_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+  config :slack, respond_to_slack: false

@@ -19,14 +19,14 @@ defmodule Judgement do
     children = 
     if System.get_env("SLACK_API_TOKEN") do
           [
-      # Start the Ecto repository
-      supervisor(Judgement.Repo, []),
-      # Start the endpoint when the application starts
-      supervisor(Judgement.Endpoint, []),
-      # Start your own worker by calling: Judgement.Worker.start_link(arg1, arg2, arg3)
-      # worker(Judgement.Worker, [arg1, arg2, arg3]),
-      worker(Slack.Bot, [SlackRtm, [], System.get_env("SLACK_API_TOKEN")]),
-    ]
+            # Start the Ecto repository
+            supervisor(Judgement.Repo, []),
+            # Start the endpoint when the application starts
+            supervisor(Judgement.Endpoint, []),
+            # Start your own worker by calling: Judgement.Worker.start_link(arg1, arg2, arg3)
+            # worker(Judgement.Worker, [arg1, arg2, arg3]),
+            worker(Slack.Bot, [SlackRtm, [], System.get_env("SLACK_API_TOKEN")]),
+          ]
     else
           [supervisor(Judgement.Repo, []),
            supervisor(Judgement.Endpoint, [])]
