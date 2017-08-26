@@ -55,25 +55,30 @@ defmodule Judgement.SlackService do
 
     def lookup(player_name, channel) do
         player = Player.with_name(player_name)
-        winning_ratio = Player.winning_ratio_by_day(player)
-        last_10_games = Result.last_n(player, 10)
-                        |> Enum.map_join("\n", &("#{&1.winner.name} defeated #{&1.loser.name}"))
+        if (player) do
+            winning_ratio = Player.winning_ratio_by_day(player)
+            last_10_games = Result.last_n(player, 10)
+                            |> Enum.map_join("\n", &("#{&1.winner.name} defeated #{&1.loser.name}"))
 
-        h2h_record = Player.all
-                        |> filter_out_player(player)
-                        |> Enum.sort(&(&1.name < &2.name))
-                        |> Enum.map_join("\n", &(h2h_message(player, &1)))
+            h2h_record = Player.all
+                            |> filter_out_player(player)
+                            |> Enum.sort(&(&1.name < &2.name))
+                            |> Enum.map_join("\n", &(h2h_message(player, &1)))
 
-        attachments = [%{"color": "green", 
-                         "title": player.name,
-                         "fields": [create_field("wins", Player.wins(player), true),
-                                    create_field("losses", Player.losses(player), true),
-                                    create_field("winning %", Number.Percentage.number_to_percentage(Player.ratio(player), precision: 0), true),
-                                    create_field("winning % by day", winning_percent_by_day(winning_ratio), false),
-                                    create_field("Last 10 Results", last_10_games, false),
-                                    create_field("h2h", h2h_record, false)]}]
-        
-        Slack.Web.Chat.post_message(channel, "", %{attachments: Poison.encode!(attachments)})
+            attachments = [%{"color": "green", 
+                            "title": player.name,
+                            "fields": [create_field("wins", Player.wins(player), true),
+                                        create_field("losses", Player.losses(player), true),
+                                        create_field("winning %", Number.Percentage.number_to_percentage(Player.ratio(player), precision: 0), true),
+                                        create_field("winning % by day", winning_percent_by_day(winning_ratio), false),
+                                        create_field("Last 10 Results", last_10_games, false),
+                                        create_field("h2h", h2h_record, false)]}]
+            
+            Slack.Web.Chat.post_message(channel, "", %{attachments: Poison.encode!(attachments)})
+        else
+            ""            
+        end
+
     end
 
     defp h2h_message(player, opponent) do
@@ -93,12 +98,17 @@ defmodule Judgement.SlackService do
     def who_does_this_player_mine(player_name) do
         player = Player.with_name(player_name)
 
-        Result.all_results_sorted(player)
-            |> Enum.map(&(%{get_other_player_id(player, &1) =>  get_points_diff(player, &1)}))
-            |> Enum.reduce(%{}, fn(result_map, acc) -> merge_result_map(result_map, acc) end)
-            |> Enum.map(fn({key, value}) -> {key, value} end)
-            |> List.keysort(1)
-            |> Enum.map_join("\n", fn {k, v} -> "#{Player.find_by_id(k).name} *#{v} points*" end)
+        if player do
+                Result.all_results_sorted(player)
+                    |> Enum.map(&(%{get_other_player_id(player, &1) =>  get_points_diff(player, &1)}))
+                    |> Enum.reduce(%{}, fn(result_map, acc) -> merge_result_map(result_map, acc) end)
+                    |> Enum.map(fn({key, value}) -> {key, value} end)
+                    |> List.keysort(1)
+                    |> Enum.map_join("\n", fn {k, v} -> "#{Player.find_by_id(k).name} *#{v} points*" end)    
+        else
+            ""
+        end
+        
     end
 
     defp merge_result_map(result_map, acc) do

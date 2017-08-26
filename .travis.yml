@@ -2,18 +2,20 @@ language: elixir
 elixir:
 - 1.5.0
 deploy:
-  provider: s3
-  access_key_id: AKIAJKQURCT6VL3SVY6Q
-  secret_access_key:
-    secure: QQrsZLVA8dypGtjwOTHJMkFRlohPCGT9LiIjqrTwRniQpFj/aA2RqL1GEF544etk3PZT8hVqL/BsOLuPLYn5avUPu+y3BhGjJauiTE3CQs+N8P/fkVTJu1c2LMj2H7koqT8JsvWPpiPLG80sDhAOhenpjOtgbYZDtrtGK9DvbGzbPqADPwAoDn530EMvw+f2NmBGiG4WKeXC56zxdPaFky80cD8f1a80H6iW2ZyBZPIWT5rdGR02qIpRbJoNqyaQA6iPNQGusbgVpNZm9d/2mldxM85ByrBWG5gFq7n8LXLJF4dTy+psSAQfh6XXKEaawoKkGj8ztrGcx8SbSi2MtVxAJ+WWuKAKrmrzy/cSXAqzqdoSDQ6smF60ZKfyE8OyuXOXR/Oc24Fd81ue8SbWAOZ0r/Rgf/VbjK3yqtJ7krhmnVrPnZnyl8+4lvNOQ9mwiM1nioPJm9R1AZTfJqiKcf1s5iySuAhHN8IQpfKehl9XsWk2IVUS9OBKjyFX0S7G+aWGsThwbg0FiLhA0cyb0G6E7V+yDkKPQPWpUa08ACKB00uqKNUnF5OoQ8zB3Bx1b/TpCbgyRS72u9zrj8WeOJVrKZcglmrlgCXtYb1dTiPVy2aypyftx/OEFOoUXToUDTGeSEM1h7s/fIwcrxwXmjOj7xCDlHGMO1oFJWvGS8Y=
-  bucket: rickys-builds
-  on:
-    repo: codingricky/judgement
-    branch: production
-  provider: heroku
-  api_key:
-      secure: "RX1lrylWy65HxgI8vsARwKO5UiWP16idKT9p1icecKHbCY8vuHOuoOJNk5UxVF3L7hFTOwLEqRWhjVAlNIAvkvmZHRiYWqhko0Ogz1F+ct/42aCcozioMwVRHcTXcsdM/uE+iNwrpXmfNAPGSa070kzJqwNwgF/rRPDhLgmpd0bfLiCwxlLxGP8nv1pxIQoXgVavm7X5xWNLYF6fci8wh3VSCxVx+M9bJcokvycLt6m2ogaZSfm/ZXkyyY3yn97FO0wyxIkQZku8zO2rkLOGaRBCoScSE22viAN1OZ/OCuUMLzBAUYhSsDL9mmGnjky7JSAKG3mUZgrkPqab+qWRWbKJvcIusJdF6Ap0OAXWDgp9DxSCicBSB8U+6vFNh7Ss3fttQ4E/YZwkad2kAmmEG64oAZdsBfakea6OJxPfq2xVA/4huKW/kEBACxmAw0EA8JQI1faiu9IHb4sD5tkFQYPzUWS5BDVKnmxezMCSJ/smZvnf/Vob27iobEP9Uhg26QLGh2nGCUJTm/d8aLkpBlwuI91fJiWu83PIP4NM89w1pR5zwmVAdpTkbOdHRrcVDk8UZ73tPuTsaZaGDupRBszByOZeouNPV7yiPOw7ClwStnZkxIvIYZqpX8JeWXSkMjsruRQdZ61ITJDlD5G43Z866gSKOK3DvsSZ5KtnCos="
-  app: phtt
-  on:
-    repo: codingricky/judgement
-    branch: master
+  - provider: elasticbeanstalk
+     access_key_id: AKIAJKQURCT6VL3SVY6Q
+     secret_access_key:
+       secure: QQrsZLVA8dypGtjwOTHJMkFRlohPCGT9LiIjqrTwRniQpFj/aA2RqL1GEF544etk3PZT8hVqL/BsOLuPLYn5avUPu+y3BhGjJauiTE3CQs+N8P/fkVTJu1c2LMj2H7koqT8JsvWPpiPLG80sDhAOhenpjOtgbYZDtrtGK9DvbGzbPqADPwAoDn530EMvw+f2NmBGiG4WKeXC56zxdPaFky80cD8f1a80H6iW2ZyBZPIWT5rdGR02qIpRbJoNqyaQA6iPNQGusbgVpNZm9d/2mldxM85ByrBWG5gFq7n8LXLJF4dTy+psSAQfh6XXKEaawoKkGj8ztrGcx8SbSi2MtVxAJ+WWuKAKrmrzy/cSXAqzqdoSDQ6smF60ZKfyE8OyuXOXR/Oc24Fd81ue8SbWAOZ0r/Rgf/VbjK3yqtJ7krhmnVrPnZnyl8+4lvNOQ9mwiM1nioPJm9R1AZTfJqiKcf1s5iySuAhHN8IQpfKehl9XsWk2IVUS9OBKjyFX0S7G+aWGsThwbg0FiLhA0cyb0G6E7V+yDkKPQPWpUa08ACKB00uqKNUnF5OoQ8zB3Bx1b/TpCbgyRS72u9zrj8WeOJVrKZcglmrlgCXtYb1dTiPVy2aypyftx/OEFOoUXToUDTGeSEM1h7s/fIwcrxwXmjOj7xCDlHGMO1oFJWvGS8Y=
+     region: ap-southeast-2
+     env: dtt-dev
+     bucket_name: rickys-builds
+     on:
+       repo: codingricky/judgement
+       branch: production
+  - provider: heroku
+     api_key:
+       secure: "RX1lrylWy65HxgI8vsARwKO5UiWP16idKT9p1icecKHbCY8vuHOuoOJNk5UxVF3L7hFTOwLEqRWhjVAlNIAvkvmZHRiYWqhko0Ogz1F+ct/42aCcozioMwVRHcTXcsdM/uE+iNwrpXmfNAPGSa070kzJqwNwgF/rRPDhLgmpd0bfLiCwxlLxGP8nv1pxIQoXgVavm7X5xWNLYF6fci8wh3VSCxVx+M9bJcokvycLt6m2ogaZSfm/ZXkyyY3yn97FO0wyxIkQZku8zO2rkLOGaRBCoScSE22viAN1OZ/OCuUMLzBAUYhSsDL9mmGnjky7JSAKG3mUZgrkPqab+qWRWbKJvcIusJdF6Ap0OAXWDgp9DxSCicBSB8U+6vFNh7Ss3fttQ4E/YZwkad2kAmmEG64oAZdsBfakea6OJxPfq2xVA/4huKW/kEBACxmAw0EA8JQI1faiu9IHb4sD5tkFQYPzUWS5BDVKnmxezMCSJ/smZvnf/Vob27iobEP9Uhg26QLGh2nGCUJTm/d8aLkpBlwuI91fJiWu83PIP4NM89w1pR5zwmVAdpTkbOdHRrcVDk8UZ73tPuTsaZaGDupRBszByOZeouNPV7yiPOw7ClwStnZkxIvIYZqpX8JeWXSkMjsruRQdZ61ITJDlD5G43Z866gSKOK3DvsSZ5KtnCos="
+     app: phtt
+     on:
+       repo: codingricky/judgement
+       branch: master
