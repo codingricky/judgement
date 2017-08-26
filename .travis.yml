@@ -7,7 +7,7 @@ deploy:
     secret_access_key:
       secure: QQrsZLVA8dypGtjwOTHJMkFRlohPCGT9LiIjqrTwRniQpFj/aA2RqL1GEF544etk3PZT8hVqL/BsOLuPLYn5avUPu+y3BhGjJauiTE3CQs+N8P/fkVTJu1c2LMj2H7koqT8JsvWPpiPLG80sDhAOhenpjOtgbYZDtrtGK9DvbGzbPqADPwAoDn530EMvw+f2NmBGiG4WKeXC56zxdPaFky80cD8f1a80H6iW2ZyBZPIWT5rdGR02qIpRbJoNqyaQA6iPNQGusbgVpNZm9d/2mldxM85ByrBWG5gFq7n8LXLJF4dTy+psSAQfh6XXKEaawoKkGj8ztrGcx8SbSi2MtVxAJ+WWuKAKrmrzy/cSXAqzqdoSDQ6smF60ZKfyE8OyuXOXR/Oc24Fd81ue8SbWAOZ0r/Rgf/VbjK3yqtJ7krhmnVrPnZnyl8+4lvNOQ9mwiM1nioPJm9R1AZTfJqiKcf1s5iySuAhHN8IQpfKehl9XsWk2IVUS9OBKjyFX0S7G+aWGsThwbg0FiLhA0cyb0G6E7V+yDkKPQPWpUa08ACKB00uqKNUnF5OoQ8zB3Bx1b/TpCbgyRS72u9zrj8WeOJVrKZcglmrlgCXtYb1dTiPVy2aypyftx/OEFOoUXToUDTGeSEM1h7s/fIwcrxwXmjOj7xCDlHGMO1oFJWvGS8Y=
     region: ap-southeast-2
-    app: another-dius-tennis-table-app
+    app: another-dius-table-tennis-app
     env: dtt-dev
     bucket_name: rickys-builds
     on:
