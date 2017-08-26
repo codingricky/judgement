@@ -1,6 +1,6 @@
 language: elixir
 elixir:
-- 1.4.1
+- 1.5.0
 deploy:
   provider: s3
   access_key_id: AKIAJKQURCT6VL3SVY6Q
