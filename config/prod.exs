@@ -23,7 +23,7 @@ config :judgement, Judgement.Endpoint,
   check_origin: false
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger, level: :debug
 
 # ## SSL Support
 #
