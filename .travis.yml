@@ -1,6 +1,6 @@
 language: elixir
 elixir:
-- 1.5.0
+- 1.4.1
 deploy:
   provider: s3
   access_key_id: AKIAJKQURCT6VL3SVY6Q
@@ -14,6 +14,6 @@ deploy:
   api_key:
       secure: "SGxLxuYbYuJxSzfPWx6UznsMRF3hyq/WODWdYAqpjQOGSEcPeJdmcvDePjDHtf0MemrGj7jxXfnDH81cWT+Ct0s7txb4F5w+V/hDaMg5TZLchOYnC/J3Hk5Mqrl/16kccYGqoeCwSUha3zzaEq+XEOpgY0LcBoSHqcilA5yuhZ7bISC37ycLDvWQ3mqtG0KIgcRBgLtZjZVe4ZhPQF9at6yKC8AQI2ZgbGH+0AL3SstCLBx27WIvxEpuFLdd02JwzoqaSdr9corVayTPU3+eI0KZXh8azlLj2ZpJmUB9YlVLpOAVLbQwLpOkwhVVG9UiUp3DwzrWziE4URFKomoWfL0O8e3QpUad7thLk8rYfTo4GFt5zL7O5lnyenG+eLC93GlJyGzr6HWoKGKmTcDhmwLs9ocodJFmuzMtwc3w+oj3Lgg6VPRQ6LSkZO5pGLcS+hFeHn9iISG1sdfAFSXB33/XE6jCMJo6PPWxqCefowBpnJ1evUjlx5eKWwRKU0MuNEsQBxYJDabZgmYiEGjyIZJ9tTE8Lu2aFYHnaZU0ct9vWsCjPdN3xBRv/ZWS63A0rNZy1RmW6C5ms48pj9OGBNoyFEPR+kWdzQXX6ZRNv9xnDgzMEQbPxA8MfgDOYaR23ga6RwW9M6enriVjizag9rpkHOdBp43B6rdagV0IiYE="
   app: phtt
-on:
+  on:
     repo: codingricky/judgement
     branch: master
