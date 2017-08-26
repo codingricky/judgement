@@ -1,6 +1,7 @@
 language: elixir
 env:
-  - MIX_ENV=./.travis/get_env_value.sh prod staging
+  global:
+    - MIX_ENV=.$(/.travis/get_env_value.sh prod staging)
 elixir:
 - 1.4.1
 deploy:
