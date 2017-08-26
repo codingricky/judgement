@@ -56,7 +56,6 @@ config :judgement, Judgement.Repo,
   pool_size: 10
 
 
-config :slack, respond_to_slack: false
-
+config :slack, respond_to_slack: true
 config :oauth2, debug: true
   

@@ -32,7 +32,7 @@ defmodule SlackRtm do
   end
 
   def handle_event(message = %{type: "message"}, slack, state) do
-    # try do
+    try do
       cond do 
           regex? message.text, @h2h_txt -> h2h(message, slack)
           regex? message.text, @defeated_txt -> defeated(message, slack)
@@ -46,11 +46,11 @@ defmodule SlackRtm do
           regex? message.text, ~r/(^reverse show$)|(^woes$)/ -> reverse_show(message, slack)
           true -> store_quote(message, slack)
       end
-    # catch
-      # e -> Logger.error("Error occurred #{inspect(e)}")      
-    # rescue
-      # e -> Logger.error("Error occurred #{inspect(e)}")      
-    # end
+    catch
+      e -> Logger.error("Error occurred #{inspect(e)}")      
+    rescue
+      e -> Logger.error("Error occurred #{inspect(e)}")      
+    end
     {:ok, state}
   end
 
