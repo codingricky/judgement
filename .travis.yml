@@ -17,3 +17,5 @@ deploy:
   on:
     repo: codingricky/judgement
     branch: master
+  env:
+  - MIX_ENV=staging
