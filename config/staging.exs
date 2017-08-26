@@ -42,7 +42,7 @@ config :judgement, Judgement.Repo,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   ssl: true
 
-config :slack, respond_to_slack: true
+config :slack, respond_to_slack: "true"
 
 # # Configure your database
 # config :judgement, Judgement.Repo,
