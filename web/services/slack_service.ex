@@ -4,6 +4,7 @@ defmodule Judgement.SlackService do
     alias Judgement.Result
     alias Judgement.Repo
     alias Judgement.Quote
+    require Logger
     
     @days %{1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", 7 => "Sunday"}
 
@@ -29,11 +30,15 @@ defmodule Judgement.SlackService do
     end
 
     def h2h(player_1, player_2) do
+        Logger.info("#{inspect(player_1)} h2h #{inspect(player_2)}")
         player = Player.with_name(player_1)
         opponent = Player.with_name(player_2)
-        h2h = Player.h2h(player, opponent)
-
-        "*#{player.name}* h2h *#{opponent.name}* #{h2h[:wins]} wins #{h2h[:losses]} losses #{Number.Percentage.number_to_percentage(h2h[:ratio], precision: 0)}"
+        if player && opponent do
+            h2h = Player.h2h(player, opponent)
+            "*#{player.name}* h2h *#{opponent.name}* #{h2h[:wins]} wins #{h2h[:losses]} losses #{Number.Percentage.number_to_percentage(h2h[:ratio], precision: 0)}"    
+        else
+            ""
+        end
     end
 
     def create_result(winner, loser, times \\ 1) do
@@ -135,6 +140,7 @@ defmodule Judgement.SlackService do
     def store_quote(message, slack_id) do
         player = Player.find_by_slack_id(slack_id)
         if player && !Quote.find_by_quote_and_player_id(message, player.id) do
+            Logger.info("saving #{inspect(message)} against #{inspect(player.name)}")
             GameService.create_quote(message, player.id)
         end
     end

@@ -2,6 +2,7 @@ require IEx
 
 defmodule SlackRtm do
   use Slack
+  require Logger
 
   alias Judgement.SlackService
 
@@ -26,12 +27,12 @@ defmodule SlackRtm do
   @best_day_to_play_txt ~r/what's the best day to play (?<player>[A-Za-z]+)?/
 
   def handle_connect(_slack, state) do
-    IO.puts "connected"
+    Logger.info "connected"
     {:ok, state}
   end
 
   def handle_event(message = %{type: "message"}, slack, state) do
-    try do
+    # try do
       cond do 
           regex? message.text, @h2h_txt -> h2h(message, slack)
           regex? message.text, @defeated_txt -> defeated(message, slack)
@@ -45,11 +46,11 @@ defmodule SlackRtm do
           regex? message.text, ~r/(^reverse show$)|(^woes$)/ -> reverse_show(message, slack)
           true -> store_quote(message, slack)
       end
-    catch
-      e -> IO.puts("Error occurred #{inspect(e)}")      
-    rescue
-      e -> IO.puts("Error occurred #{inspect(e)}")      
-    end
+    # catch
+      # e -> Logger.error("Error occurred #{inspect(e)}")      
+    # rescue
+      # e -> Logger.error("Error occurred #{inspect(e)}")      
+    # end
     {:ok, state}
   end
 
@@ -60,22 +61,27 @@ defmodule SlackRtm do
   end
 
   defp help(message, slack) do
+    Logger.info("help")
     SlackClient.send_message(@help_message, message.channel, slack)
   end
 
   defp show_full(message, slack) do
+    Logger.info("show full")
     SlackClient.send_message(SlackService.show_full, message.channel, slack)
   end
 
   defp show(message, slack) do
+    Logger.info("show")
     SlackClient.send_message(SlackService.show, message.channel, slack)
   end
 
   defp reverse_show(message, slack) do
+    Logger.info("reverse show")
     SlackClient.send_message(SlackService.reverse_show, message.channel, slack)
   end
 
   defp lookup(message, _slack) do
+    Logger.info("lookup")
     case Regex.named_captures(@lookup_txt, message.text) do
       %{"player" => player} -> SlackService.lookup(player, message.channel)
       _ -> ""
@@ -83,6 +89,7 @@ defmodule SlackRtm do
   end
 
   defp defeated(message, slack) do
+    Logger.info("defeated")
     result = case Regex.named_captures(@defeated_txt, message.text) do
       %{"winner" => winner, "loser" => loser, "times" => ""} -> SlackService.create_result(winner, loser)
       %{"winner" => winner, "loser" => loser, "times" => times} -> SlackService.create_result(winner, loser, String.to_integer(times))
@@ -96,6 +103,7 @@ defmodule SlackRtm do
   end
 
   defp h2h(message, slack) do 
+    Logger.info("h2h")
     case Regex.named_captures(@h2h_txt, message.text) do
       %{"player_1" => player_1, "player_2" => player_2} -> SlackClient.send_message(SlackService.h2h(player_1, player_2), message.channel, slack)
       _ -> ""
@@ -103,6 +111,7 @@ defmodule SlackRtm do
   end
 
   defp mine(message, slack) do
+    Logger.info("mine")
     case Regex.named_captures(@mine_txt, message.text) do
       %{"player" => player} -> SlackClient.send_message(SlackService.who_does_this_player_mine(player), message.channel, slack)
       _ -> ""
@@ -110,6 +119,7 @@ defmodule SlackRtm do
   end
 
   defp change_colour(message, slack) do
+    Logger.info("change colour")
     case Regex.named_captures(@change_colours_txt, message.text) do
       %{"player" => player, "colour" => colour} -> SlackClient.send_message(SlackService.change_colour(player, colour), message.channel, slack)
       _ -> ""
@@ -117,6 +127,7 @@ defmodule SlackRtm do
   end
 
   defp best_day_to_play(message, slack) do
+    Logger.info("best day")
     case Regex.named_captures(@best_day_to_play_txt, message.text) do
       %{"player" => player} -> SlackClient.send_message("The best day to play #{player} is #{SlackService.best_day_to_play(player)}", message.channel, slack)
       _ -> ""
@@ -124,7 +135,7 @@ defmodule SlackRtm do
   end
 
   def store_quote(message, _slack) do
-    IO.puts "storing message=#{inspect(message)}"
+    Logger.info "storing message=#{inspect(message)}"
     if message.user do
       SlackService.store_quote(message, message.user)      
     end
