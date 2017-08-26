@@ -27,16 +27,6 @@ config :judgement, Judgement.Endpoint,
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
 
 
-# Watch static and templates for browser reloading.
-config :judgement, Judgement.Endpoint,
-  live_reload: [
-    patterns: [
-      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
-      ~r{priv/gettext/.*(po)$},
-      ~r{web/views/.*(ex)$},
-      ~r{web/templates/.*(eex)$}
-    ]
-  ]
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
@@ -53,4 +43,12 @@ config :judgement, Judgement.Repo,
   ssl: true
 
 config :slack, respond_to_slack: true
-  
+
+# # Configure your database
+# config :judgement, Judgement.Repo,
+#   adapter: Ecto.Adapters.Postgres,
+#   username: "postgres",
+#   password: "postgres",
+#   database: "judgement_dev",
+#   hostname: "localhost",
+#   pool_size: 10
