@@ -18,4 +18,4 @@ deploy:
     repo: codingricky/judgement
     branch: master
   env:
-  - MIX_ENV=staging
+  - MIX_ENV=./.travis/get_env_specific_value.sh prod staging
