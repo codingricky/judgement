@@ -39,6 +39,14 @@ defmodule Judgement.Player do
               order_by: [asc: p.name]) |> Repo.preload(:rating)
   end
 
+  def all_active do
+    Repo.all(from p in Judgement.Player,
+              select: p,
+              order_by: [asc: p.name]) 
+            |> Repo.preload(:rating)
+            |> Enum.filter(&(is_active?(&1)))
+  end
+
   def wins(player) do
     Result.no_of_wins(player)
   end
@@ -124,10 +132,11 @@ defmodule Judgement.Player do
 
   def is_active?(player) do
     day_in_seconds = 60 * 60 * 24    
-    twenty_days_ago = NaiveDateTime.utc_now
-                          |> NaiveDateTime.add(-1 * day_in_seconds * 20, :second)
+    twenty_days_ago = NaiveDateTime.utc_now |> NaiveDateTime.add(-1 * day_in_seconds * 20, :second)
 
-    no_of_recent_games(player, twenty_days_ago) >= 10
+    has_one_game_in_20_days = no_of_recent_games(player, twenty_days_ago) > 0
+    has_more_than_10_games = no_of_games(player) > 10
+    has_one_game_in_20_days && has_more_than_10_games
   end
 
   def winning_ratio_by_day(player) do

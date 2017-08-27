@@ -60,19 +60,18 @@ defmodule Judgement.SlackService do
             last_10_games = Result.last_n(player, 10)
                             |> Enum.map_join("\n", &("#{&1.winner.name} defeated #{&1.loser.name}"))
 
-            h2h_record = Player.all
+            h2h_record = Player.all_active
                             |> filter_out_player(player)
                             |> Enum.sort(&(&1.name < &2.name))
-                            |> Enum.map_join("\n", &(h2h_message(player, &1)))
-
+                            |> Enum.map(&(create_field("h2h with #{&1.name}", h2h_message(player, &1), false)))
+            IO.puts("#{inspect(h2h_record)}")
             attachments = [%{"color": "green", 
                             "title": player.name,
                             "fields": [create_field("wins", Player.wins(player), true),
                                         create_field("losses", Player.losses(player), true),
                                         create_field("winning %", Number.Percentage.number_to_percentage(Player.ratio(player), precision: 0), true),
                                         create_field("winning % by day", winning_percent_by_day(winning_ratio), false),
-                                        create_field("Last 10 Results", last_10_games, false),
-                                        create_field("h2h", h2h_record, false)]}]
+                                        create_field("Last 10 Results", last_10_games, false)] ++ h2h_record}]
             
             SlackClient.post_message(channel, "", %{attachments: Poison.encode!(attachments)})
         else
@@ -83,7 +82,7 @@ defmodule Judgement.SlackService do
 
     defp h2h_message(player, opponent) do
         h2h_record = Player.h2h(player, opponent)
-        "h2h with #{opponent.name} wins #{h2h_record[:wins]} losses #{h2h_record[:losses]} #{Number.Percentage.number_to_percentage(h2h_record[:ratio], precision: 0)}"
+        "wins #{h2h_record[:wins]} losses #{h2h_record[:losses]} #{Number.Percentage.number_to_percentage(h2h_record[:ratio], precision: 0)}"
     end
 
     defp winning_percent_by_day(winning_ratio) do
