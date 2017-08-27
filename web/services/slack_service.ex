@@ -74,7 +74,7 @@ defmodule Judgement.SlackService do
                                         create_field("Last 10 Results", last_10_games, false),
                                         create_field("h2h", h2h_record, false)]}]
             
-            Slack.Web.Chat.post_message(channel, "", %{attachments: Poison.encode!(attachments)})
+            SlackClient.post_message(channel, "", %{attachments: Poison.encode!(attachments)})
         else
             ""            
         end
