@@ -26,7 +26,12 @@ defmodule Judgement.GameService do
     def update_player(name, email) do
       Player.changeset(%Player{}, %{name: name, email: email})
                          |> Repo.update
-     end
+    end
+
+    def update_avatar_url(player, avatar_url) do
+      Player.changeset(player, %{avatar_url: avatar_url})
+              |> Repo.update
+    end
 
     def find_player(email) do
       Repo.get_by(Player, email: email)

@@ -64,6 +64,7 @@ defmodule Judgement.SlackService do
                             |> filter_out_player(player)
                             |> Enum.sort(&(&1.name < &2.name))
                             |> Enum.map(&(create_field("h2h with #{&1.name}", h2h_message(player, &1), false)))
+                            
             IO.puts("#{inspect(h2h_record)}")
             attachments = [%{"color": "green", 
                             "title": player.name,
@@ -147,10 +148,35 @@ defmodule Judgement.SlackService do
     end
 
     def store_quote(message, slack_id) do
-        player = Player.find_by_slack_id(slack_id)
+        player = player_from_slack_id(slack_id)
+        store_avatar(player, slack_id)
         if player && !Quote.find_by_quote_and_player_id(message, player.id) do
             Logger.info("saving #{inspect(message)} against #{inspect(player.name)}")
             GameService.create_quote(message, player.id)
+        end
+    end
+
+    def store_avatar(player, slack_id) do
+        if player.avatar_url == nil do
+            GameService.update_avatar_url(player, get_avatar_url_from_slack_id(slack_id))
+        end        
+    end
+
+    defp get_name_from_slack_id(slack_id) do
+        case Slack.Web.Users.info(slack_id) do
+            %{"user" => %{"name" => name}} -> name
+            _ -> ""
+        end
+    end
+
+    defp player_from_slack_id(slack_id) do
+        Player.with_name(get_name_from_slack_id(slack_id))        
+    end
+
+    def get_avatar_url_from_slack_id(slack_id) do
+        case Slack.Web.Users.info(slack_id) do
+            %{"user" => %{"profile" => %{"image_original" => url}}} -> url
+            _ -> ""
         end
     end
 end

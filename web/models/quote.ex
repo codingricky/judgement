@@ -26,7 +26,5 @@ defmodule Judgement.Quote do
         Repo.get_by(Judgement.Quote, quote: message, player_id: player_id)
             |> Repo.preload(:player)
     end
-
-    def create(message, player_id) do 
-    end
+    
 end
