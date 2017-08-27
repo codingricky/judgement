@@ -103,10 +103,10 @@ defmodule SlackRtm do
     SlackClient.send_message(SlackService.reverse_show, message.channel, slack)
   end
 
-  defp lookup(message, _slack) do
+  defp lookup(message, slack) do
     Logger.info("lookup")
     case Regex.named_captures(@lookup_txt, message.text) do
-      %{"player" => player} -> SlackService.lookup(player, message.channel)
+      %{"player" => player} -> SlackService.lookup(player, message.channel, slack)
       _ -> ""
     end  
   end

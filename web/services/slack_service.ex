@@ -53,7 +53,7 @@ defmodule Judgement.SlackService do
         end
     end
 
-    def lookup(player_name, channel) do
+    def lookup(player_name, channel, slack) do
         player = Player.with_name(player_name)
         if (player) do
             winning_ratio = Player.winning_ratio_by_day(player)
@@ -65,9 +65,9 @@ defmodule Judgement.SlackService do
                             |> Enum.sort(&(&1.name < &2.name))
                             |> Enum.map(&(create_field("h2h with #{&1.name}", h2h_message(player, &1), false)))
                             
-            IO.puts("#{inspect(h2h_record)}")
             attachments = [%{"color": "green", 
                             "title": player.name,
+                            "image_url": (if player.avatar_url, do: player.avatar_url, else: ""),
                             "fields": [create_field("wins", Player.wins(player), true),
                                         create_field("losses", Player.losses(player), true),
                                         create_field("winning %", Number.Percentage.number_to_percentage(Player.ratio(player), precision: 0), true),
@@ -76,7 +76,7 @@ defmodule Judgement.SlackService do
             
             SlackClient.post_message(channel, "", %{attachments: Poison.encode!(attachments)})
         else
-            ""            
+            SlackClient.send_message("#{player_name} not found", channel, slack)          
         end
 
     end
