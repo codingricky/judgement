@@ -135,8 +135,8 @@ defmodule Judgement.Player do
     twenty_days_ago = NaiveDateTime.utc_now |> NaiveDateTime.add(-1 * day_in_seconds * 20, :second)
 
     has_one_game_in_20_days = no_of_recent_games(player, twenty_days_ago) > 0
-    has_more_than_10_games = no_of_games(player) > 10
-    has_one_game_in_20_days && has_more_than_10_games
+    has_at_least_10_games = no_of_games(player) >= 10
+    has_one_game_in_20_days && has_at_least_10_games
   end
 
   def winning_ratio_by_day(player) do
