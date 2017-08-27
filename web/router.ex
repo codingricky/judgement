@@ -39,6 +39,10 @@ defmodule Judgement.Router do
     delete "/logout", AuthController, :delete
   end
 
+  scope "/api", Judgement do
+    get "/lights", LightsController, :index
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", Judgement do
   #   pipe_through :api
