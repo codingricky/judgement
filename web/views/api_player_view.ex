@@ -6,7 +6,7 @@ defmodule Judgement.ApiPlayerView do
 
     def render("index.json", %{player: player}) do
         case GameService.leaderboard_info(player) do
-            %{rank: rank, points: points, color: color} -> %{"rank" => rank, "points" => points, "color" => color, "day" => Player.best_day_to_play(player.name)}
+            %{rank: rank, points: points, color: color} -> %{"rank" => rank, "points" => points, "color" => color, "day" => Player.best_day_to_play(player.name), "avatar_url" => player.avatar_url}
              _ -> "not found"
         end
     end

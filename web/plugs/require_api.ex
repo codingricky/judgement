@@ -28,7 +28,6 @@ defmodule Judgement.Plugs.RequireApi do
         Phoenix.Token.verify(Judgement.Endpoint, get_secret_key, token, max_age: 9999999999999)        
     end
 
-
     defp send_unauthorized(conn) do
         conn
         |> send_resp(401, "Not allowed")
