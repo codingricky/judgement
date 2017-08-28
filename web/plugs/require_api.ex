@@ -14,18 +14,18 @@ defmodule Judgement.Plugs.RequireApi do
 
     defp handle_header(conn, header) do
         bearer = String.trim(String.replace(header, "Bearer", ""))
-        case Phoenix.Token.verify(Judgement.Endpoint, get_secret_key, bearer, max_age: 9999999999999) do
-            {:ok, id} -> conn
+        case verify(bearer) do
+            {:ok, _id} -> conn
             {:error, _} -> send_unauthorized(conn)
         end
     end
 
     def sign() do 
-        Phoenix.Token.sign(Judgement.Endpoint, get_secret_key, 1)
+        Phoenix.Token.sign(Judgement.Endpoint, get_secret_key(), 1)
     end
 
     def verify(token) do
-        Phoenix.Token.verify(Judgement.Endpoint, get_secret_key, token, max_age: 9999999999999)        
+        Phoenix.Token.verify(Judgement.Endpoint, get_secret_key(), token, max_age: 9999999999999)        
     end
 
     defp send_unauthorized(conn) do

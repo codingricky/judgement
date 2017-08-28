@@ -186,7 +186,10 @@ defmodule Judgement.Player do
   end
 
   def random_quote(player) do
-    Quote.random_quote(player)
+    case Quote.random_quote(player) do
+      %Judgement.Quote{quote: message} -> message
+      _ -> "nothing"
+    end
   end
 
   def what_would_tony_say() do

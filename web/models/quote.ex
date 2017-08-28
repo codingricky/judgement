@@ -1,9 +1,7 @@
 defmodule Judgement.Quote do
   use Judgement.Web, :model
 
-  alias Judgement.Rating
   alias Judgement.Repo
-  alias Judgement.Result
   alias Judgement.Player
 
   schema "quotes" do
@@ -36,5 +34,5 @@ defmodule Judgement.Quote do
     def random_quote(player) do
         Enum.random(quotes(player))
     end
-    
+
 end
