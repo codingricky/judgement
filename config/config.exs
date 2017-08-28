@@ -28,7 +28,7 @@ config :judgement, Google,
   redirect_uri: System.get_env("GOOGLE_REDIRECT")
 
 config :slack, api_token: System.get_env("SLACK_API_TOKEN")
-
+config :judgement, api_secret: System.get_env("SECRET_KEY_PASSPHRASE")
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

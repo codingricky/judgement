@@ -9,10 +9,6 @@ defmodule Judgement.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
   # no login
   scope "/", Judgement do
     pipe_through :browser
@@ -38,13 +34,15 @@ defmodule Judgement.Router do
     get "/:provider/callback", AuthController, :callback
     delete "/logout", AuthController, :delete
   end
+  
+  pipeline :api do
+    plug :accepts, ["json"]
+    plug Judgement.Plugs.RequireApi
+  end
 
   scope "/api", Judgement do
+    pipe_through :api    
     get "/lights", LightsController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", Judgement do
-  #   pipe_through :api
-  # end
 end

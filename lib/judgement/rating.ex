@@ -2,7 +2,7 @@ defmodule Judgement.Rating do
   use Ecto.Schema
   import Ecto.Changeset
   alias Judgement.Rating
-
+  alias Judgement.Player
 
   schema "ratings" do
     field :value, :integer, default: 1000

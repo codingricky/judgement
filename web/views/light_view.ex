@@ -5,7 +5,6 @@ defmodule Judgement.LightsView do
 
     def render("index.json", %{players: players}) do
         players |> Enum.map(&(convert_to_json(&1)))
-        
     end
 
     defp convert_to_json(player) do

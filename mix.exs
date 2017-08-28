@@ -46,7 +46,7 @@ defmodule Judgement.Mixfile do
       {:oauth2, "~> 0.9"},
       {:phoenix_html_simplified_helpers, "~> 1.3.2"},
       {:number, "~> 0.4.1"},
-      {:slack, "~> 0.12.0"}  
+      {:slack, "~> 0.12.0"}    
     ]
   end
 
