@@ -42,7 +42,9 @@ defmodule Judgement.Router do
 
   scope "/api", Judgement do
     pipe_through :api    
+    
     get "/lights", LightsController, :index
+    get "/player/:name", ApiPlayerController, :index
   end
 
 end

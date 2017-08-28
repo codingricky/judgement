@@ -140,11 +140,8 @@ defmodule Judgement.SlackService do
          end
     end
 
-    def best_day_to_play(player) do
-        best_day = Player.with_name(player)
-                        |> Player.winning_ratio_by_day()
-                        |> Enum.reduce(fn(day, acc) -> if acc[:ratio] < day[:ratio], do: acc, else: day end)
-        @days[best_day[:day]]
+    def best_day_to_play(name) do
+       Player.best_day_to_play(name)
     end
 
     def store_quote(message, slack_id) do

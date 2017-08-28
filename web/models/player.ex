@@ -195,4 +195,13 @@ defmodule Judgement.Player do
       player -> Judgement.Player.random_quote(player)
     end
   end
+
+  def best_day_to_play(name) do
+    days = %{1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", 7 => "Sunday"}
+    
+    best_day = Judgement.Player.with_name(name)
+    |> Judgement.Player.winning_ratio_by_day()
+    |> Enum.reduce(fn(day, acc) -> if acc[:ratio] < day[:ratio], do: acc, else: day end)
+    days[best_day[:day]]
+  end
 end
