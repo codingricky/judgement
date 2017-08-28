@@ -45,6 +45,7 @@ defmodule Judgement.Router do
     
     get "/lights", LightsController, :index
     get "/player/:name", ApiPlayerController, :index
+    get "/quote", QuoteController, :index
   end
 
 end
