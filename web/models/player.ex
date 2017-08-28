@@ -4,6 +4,7 @@ defmodule Judgement.Player do
   alias Judgement.Rating
   alias Judgement.Repo
   alias Judgement.Result
+  alias Judgement.Quote
 
   schema "players" do
     field :name, :string
@@ -182,5 +183,16 @@ defmodule Judgement.Player do
 
   defp count_loss(result, player) do
     if result.loser.id == player.id, do: 1, else: 0
+  end
+
+  def random_quote(player) do
+    Quote.random_quote(player)
+  end
+
+  def what_would_tony_say() do
+    case Judgement.Player.with_name("Tony") do
+      nil -> "nothing"
+      player -> Judgement.Player.random_quote(player)
+    end
   end
 end

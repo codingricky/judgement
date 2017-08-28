@@ -55,7 +55,11 @@ defmodule Judgement.GameService do
     end
   
     defp compose_message(winner, winner_rating_before, winner_rating_after, loser, loser_rating_before, loser_rating_after, times) do
-      ":table_tennis_paddle_and_ball: #{message(winner, winner_rating_before, winner_rating_after)} defeats #{message(loser, loser_rating_before, loser_rating_after)} #{multipler(times)}" 
+      ":table_tennis_paddle_and_ball: #{message(winner, winner_rating_before, winner_rating_after)} defeats #{message(loser, loser_rating_before, loser_rating_after)} #{multipler(times)}" <> "\n" <> get_tony_quote()
+    end
+
+    defp get_tony_quote() do
+      ":tony: says _#{Player.what_would_tony_say()}_"
     end
 
     defp message(name, rating_before, rating_after) do

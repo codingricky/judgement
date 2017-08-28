@@ -179,4 +179,12 @@ defmodule Judgement.SlackService do
             _ -> ""
         end
     end
+
+    def what_would_player_say(player_name, channel, slack) do
+        case Player.with_name(player_name)
+            |> Player.random_quote() do
+                %Judgement.Quote{quote: message} -> SlackClient.send_message("*#{player_name}* says _#{message}_", channel, slack)
+                _ -> SlackClient.send_message("*#{player_name}* says nothing", channel, slack) 
+        end
+    end
 end

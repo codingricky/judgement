@@ -26,5 +26,15 @@ defmodule Judgement.Quote do
         Repo.get_by(Judgement.Quote, quote: message, player_id: player_id)
             |> Repo.preload(:player)
     end
+
+    def quotes(player) do
+        Repo.all(from q in Judgement.Quote,
+        where: q.player_id == ^player.id,
+        select: q)
+    end
+
+    def random_quote(player) do
+        Enum.random(quotes(player))
+    end
     
 end

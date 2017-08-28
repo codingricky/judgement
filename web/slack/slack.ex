@@ -66,7 +66,8 @@ defmodule SlackRtm do
           regex? message.text, @lookup_txt -> lookup(message, slack)
           regex? message.text, @mine_txt -> mine(message, slack)
           regex? message.text, @change_colours_txt -> change_colour(message, slack)
-          regex? message.text, @best_day_to_play_txt -> best_day_to_play(message, slack)     
+          regex? message.text, @best_day_to_play_txt -> best_day_to_play(message, slack)
+          regex? message.text, @what_would_player_say_txt -> what_would_player_say(message, slack)          
           regex? message.text, ~r/(^reverse show$)|(^woes$)/ -> reverse_show(message, slack)          
           regex? message.text, ~r/help/ -> help(message, slack)
           regex? message.text, ~r/^show$/ -> show(message, slack)
@@ -164,6 +165,14 @@ defmodule SlackRtm do
     if message.user do
       SlackService.store_quote(message.text, message.user)      
     end
+  end
+
+  defp what_would_player_say(message, slack) do
+    Logger.info "what would player say"
+    case Regex.named_captures(@what_would_player_say_txt, message.text) do
+      %{"player" => player} -> SlackService.what_would_player_say(player, message.channel, slack)
+      _ -> ""
+    end      
   end
 
   def handle_info({:message, _text, _channel}, _slack, state) do
