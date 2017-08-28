@@ -1,4 +1,4 @@
-
+require IEx
 defmodule SlackClient do
     require Logger
 
@@ -9,7 +9,7 @@ defmodule SlackClient do
         end
     end
 
-    def post_message(channel, message, attachments) do
+    def post_message(channel, message, attachments \\ %{}) do
         Logger.info("post message to #{inspect(message)} slack")
         if (message && respond_to_slack?()) do
             Slack.Web.Chat.post_message(channel, message, attachments)

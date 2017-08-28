@@ -42,16 +42,20 @@ defmodule Judgement.GameService do
       winner_rating_before = get_rating(winner).value
       loser_rating_before = get_rating(loser).value
       
-      do_create_result(winner, loser, times)
+      actual_times = if times > 5, do: 5, else: times
+      do_create_result(winner, loser, actual_times)
 
       winner_rating_after = get_rating(winner).value
       loser_rating_after = get_rating(loser).value
 
-      message = compose_message(winner.name, winner_rating_before, winner_rating_after, loser.name, loser_rating_before, loser_rating_after, times)
-      if  Mix.env != :test do
-        channel = "tabletennis-testing"
-        Slack.Web.Chat.post_message(channel, message)
-      end
+      message = compose_message(winner.name, winner_rating_before, winner_rating_after, loser.name, loser_rating_before, loser_rating_after, actual_times)
+      channel = get_channel()
+      SlackClient.post_message(channel, message)
+      message
+    end
+
+    defp get_channel do
+      if Mix.env == :prod, do: "tabletennis", else: "tabletennis-testing"
     end
   
     defp compose_message(winner, winner_rating_before, winner_rating_after, loser, loser_rating_before, loser_rating_after, times) do
