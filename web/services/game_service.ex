@@ -42,7 +42,7 @@ defmodule Judgement.GameService do
       winner_rating_before = get_rating(winner).value
       loser_rating_before = get_rating(loser).value
       
-      actual_times = if times > 5, do: 5, else: times
+      actual_times = flatten_times(times)
       do_create_result(winner, loser, actual_times)
 
       winner_rating_after = get_rating(winner).value
@@ -52,6 +52,10 @@ defmodule Judgement.GameService do
       channel = get_channel()
       SlackClient.post_message(channel, message)
       message
+    end
+
+    defp flatten_times(times) do
+      if times > 5, do: 5, else: (if times < 0, do: 1, else: times)
     end
 
     defp get_channel do

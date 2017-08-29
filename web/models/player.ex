@@ -117,7 +117,7 @@ defmodule Judgement.Player do
   def with_name(name) do
     search = "#{name}%"
       Repo.one(from p in Judgement.Player,
-              where: ilike(p.name, ^search),
+              where: (ilike(p.name, ^search) or ilike(p.email, ^search)),
               select: p)
       |> Repo.preload(:rating)
   end
