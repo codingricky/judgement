@@ -1,3 +1,4 @@
+require IEx
 defmodule Judgement.AuthController do
     use Judgement.Web, :controller
     
@@ -28,18 +29,18 @@ defmodule Judgement.AuthController do
   
       # Request the user's data with the access token
       user = get_user!(provider, client)
+      if user != "dius.com.au" do
+        conn
+        |> send_resp(401, "Not allowed")
+        |> halt    
+      else
+        conn
+        |> put_session(:current_user, user)
+        |> put_session(:access_token, client.token.access_token)
+        |> redirect(to: "/")
+      end
 
-      # Store the user in the session under `:current_user` and redirect to /.
-      # In most cases, we'd probably just store the user's ID that can be used
-      # to fetch from the database. In this case, since this example app has no
-      # database, I'm just storing the user map.
-      #
-      # If you need to make additional resource requests, you may want to store
-      # the access token as well.
-      conn
-      |> put_session(:current_user, user)
-      |> put_session(:access_token, client.token.access_token)
-      |> redirect(to: "/")
+
     end
   
     defp authorize_url!("google"),   do: Google.authorize_url!(scope: "email profile")
@@ -50,6 +51,7 @@ defmodule Judgement.AuthController do
   
     defp get_user!("google", client) do
       %{status_code: 200, body: user} = OAuth2.Client.get!(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect")
-      %{name: user["name"], avatar: user["picture"]}
+      IEx.pry
+      %{name: user["name"], avatar: user["picture"], hd: user["hd"]}
     end
   end
