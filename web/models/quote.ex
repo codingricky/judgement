@@ -32,7 +32,10 @@ defmodule Judgement.Quote do
     end
 
     def random_quote(player) do
-        Enum.random(quotes(player))
+        case quotes(player) do
+            [] -> ""
+            quotes -> Enum.random(quotes)
+        end
     end
 
 end

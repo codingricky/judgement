@@ -146,6 +146,7 @@ defmodule Judgement.SlackService do
 
     def store_quote(message, slack_id) do
         player = player_from_slack_id(slack_id)
+        Logger.info("resolved #{slack_id} to #{inspect(player)}")
         store_avatar(player, slack_id)
         if player && !Quote.find_by_quote_and_player_id(message, player.id) do
             Logger.info("saving #{inspect(message)} against #{inspect(player.name)}")
