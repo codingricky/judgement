@@ -51,7 +51,6 @@ defmodule Judgement.AuthController do
   
     defp get_user!("google", client) do
       %{status_code: 200, body: user} = OAuth2.Client.get!(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect")
-      IEx.pry
       %{name: user["name"], avatar: user["picture"], hd: user["hd"]}
     end
   end
