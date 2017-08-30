@@ -38,7 +38,7 @@ defmodule Judgement.GameService do
       |> Repo.preload(:rating)
     end
 
-    def create_result(winner, loser, times \\ 1) do
+    def create_result(winner, loser, times \\ 1, notify \\ true) do
       winner_rating_before = get_rating(winner).value
       loser_rating_before = get_rating(loser).value
       
@@ -49,8 +49,10 @@ defmodule Judgement.GameService do
       loser_rating_after = get_rating(loser).value
 
       message = compose_message(winner.name, winner_rating_before, winner_rating_after, loser.name, loser_rating_before, loser_rating_after, actual_times)
-      channel = get_channel()
-      SlackClient.post_message(channel, message)
+      if (notify) do
+        channel = get_channel()
+        SlackClient.post_message(channel, message)        
+      end
       message
     end
 

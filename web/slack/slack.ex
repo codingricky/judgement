@@ -48,6 +48,8 @@ defmodule SlackRtm do
     {:ok, state}
   end
 
+  def handle_event(_, _, state), do: {:ok, state}
+  
   def is_bot(user) do
     if user == nil do 
         true
@@ -59,7 +61,6 @@ defmodule SlackRtm do
     end
   end
 
-  def handle_event(_, _, state), do: {:ok, state}
 
   defp handle_message(message, slack) do
      try do
@@ -123,12 +124,11 @@ defmodule SlackRtm do
     result = case Regex.named_captures(@defeated_txt, message.text) do
       %{"winner" => winner, "loser" => loser, "times" => ""} -> SlackService.create_result(winner, loser)
       %{"winner" => winner, "loser" => loser, "times" => times} -> SlackService.create_result(winner, loser, String.to_integer(times))
-      _ -> {:ok}
+      _ -> {:ok, message: "sorry couldn't process request"}
     end
-
+    Logger.info("result=#{inspect(result)}")
     case result do
-      {:ok} -> {:ok}
-      {:error, error} -> SlackClient.send_message(error, message.channel, slack) 
+      {_, result_message} -> SlackClient.send_message(result_message, message.channel, slack) 
     end
   end
 
