@@ -29,7 +29,7 @@ defmodule Judgement.AuthController do
   
       # Request the user's data with the access token
       user = get_user!(provider, client)
-      if user["hd"] != "dius.com.au" do
+      if user[:hd] != "dius.com.au" do
         conn
         |> send_resp(401, "Not allowed")
         |> halt    
