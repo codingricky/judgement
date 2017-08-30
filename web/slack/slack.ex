@@ -15,6 +15,8 @@ defmodule SlackRtm do
             *lookup [player]*                              looks up a player
             *who does [player] mine?*                      see which player does this player mine the most
             *what's the best day to play [player]?*        tells you the best day to play a player to maximise your chances
+            *what would [player] say?*                     recalls a memorable quote from someone
+            *who should I play?*                           gives you the stats on potential winnings
             *change [player]'s colour to [new colour]*     change a player's colour
             *help*                                         this message
     """
@@ -26,6 +28,7 @@ defmodule SlackRtm do
   @change_colours_txt ~r/change (?<player>[A-Za-z]+)'s colour to (?<colour>[A-Za-z]+)/
   @best_day_to_play_txt ~r/what's the best day to play (?<player>[A-Za-z]+)?/
   @what_would_player_say_txt ~r/(w|W)hat would (?<player>[A-Za-z]+)? say/
+  @who_should_i_play_txt ~r/(w|W)ho should I play/
 
   def handle_connect(_slack, state) do
     Logger.info "connected"
@@ -67,7 +70,8 @@ defmodule SlackRtm do
           regex? message.text, @mine_txt -> mine(message, slack)
           regex? message.text, @change_colours_txt -> change_colour(message, slack)
           regex? message.text, @best_day_to_play_txt -> best_day_to_play(message, slack)
-          regex? message.text, @what_would_player_say_txt -> what_would_player_say(message, slack)          
+          regex? message.text, @what_would_player_say_txt -> what_would_player_say(message, slack)
+          regex? message.text, @who_should_i_play_txt -> who_should_i_play(message, slack)     
           regex? message.text, ~r/(^reverse show$)|(^woes$)/ -> reverse_show(message, slack)          
           regex? message.text, ~r/help/ -> help(message, slack)
           regex? message.text, ~r/^show$/ -> show(message, slack)
@@ -173,6 +177,11 @@ defmodule SlackRtm do
       %{"player" => player} -> SlackService.what_would_player_say(player, message.channel, slack)
       _ -> ""
     end      
+  end
+
+  defp who_should_i_play(message, slack) do
+    Logger.info "who should I play"
+    SlackService.who_should_i_play(message.user, message.channel, slack)
   end
 
   def handle_info({:message, _text, _channel}, _slack, state) do

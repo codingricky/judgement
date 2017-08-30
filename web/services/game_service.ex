@@ -90,7 +90,7 @@ defmodule Judgement.GameService do
       winner_rating_before = winner_rating.value
       loser_rating = Rating |> Repo.get(loser.rating.id)      
       loser_rating_before = loser_rating.value
-      {winner_rating_after, loser_rating_after} = Elo.rate(winner_rating_before, loser_rating_before, :win, k_factor: 15, round: :down)
+      {winner_rating_after, loser_rating_after} = calculate_result(winner_rating_before, loser_rating_before)
 
       Ecto.Changeset.change(winner.rating, %{value: winner_rating_after})
         |> Repo.update
@@ -107,6 +107,10 @@ defmodule Judgement.GameService do
               |> Repo.insert
 
         do_create_result(winner, loser, times - 1)
+    end
+
+    def calculate_result(winner_rating, loser_rating) do
+      Elo.rate(winner_rating, loser_rating, :win, k_factor: 15, round: :down)
     end
 
     defp get_rating(player) do

@@ -183,4 +183,27 @@ defmodule Judgement.SlackService do
                     |> Player.random_quote()
         SlackClient.send_message("*#{player_name}* says _#{message}_", channel, slack)
     end
+
+    def who_should_i_play(slack_id, channel, slack) do
+        name = get_name_from_slack_id(slack_id)
+        message = case Player.with_name(name) do
+            nil -> "#{name} can not be found"
+            player -> potential_opponents(player)
+        end
+        SlackClient.send_message(message, channel, slack)
+    end
+
+    defp potential_opponents(player) do
+        Player.all_active
+        |> Enum.filter(&(&1.id != player.id))
+        |> Enum.map(&(%{name: &1.name, potential_points: calculate_points_diff(player, &1)}))
+        |> Enum.sort(&(&1[:potential_points] > &2[:potential_points]))
+        |> Enum.map(&("If you beat *#{&1[:name]}* you would get `#{&1[:potential_points]} points`"))
+        |> Enum.join("\n")
+    end
+
+    defp calculate_points_diff(winner, opponent) do
+        {winner_after, _loser_after} = GameService.calculate_result(winner.rating.value, opponent.rating.value)
+        winner_after - winner.rating.value
+    end
 end
