@@ -18,6 +18,7 @@ defmodule SlackRtm do
             *what would [player] say?*                     recalls a memorable quote from someone
             *who should I play?*                           gives you the stats on potential winnings
             *change [player]'s colour to [new colour]*     change a player's colour
+            *what if I played [player]*                    what if I played a player, how many points I would get
             *help*                                         this message
     """
 
