@@ -198,7 +198,7 @@ defmodule Judgement.SlackService do
         player = Player.with_name(name)
         opponent = Player.with_name(opponent_name)
         message = case (player != nil && name != nil) do
-            true -> "If you beat *#{opponent_name}* you would get `#{calculate_points_diff(player, opponent)} points`"
+            true -> "*If* you beat *#{opponent_name}*, you would get `#{calculate_points_diff(player, opponent)} points`"
             false -> "Could not find players"            
         end
 
@@ -210,7 +210,7 @@ defmodule Judgement.SlackService do
         |> Enum.filter(&(&1.id != player.id))
         |> Enum.map(&(%{name: &1.name, potential_points: calculate_points_diff(player, &1)}))
         |> Enum.sort(&(&1[:potential_points] > &2[:potential_points]))
-        |> Enum.map(&("If you beat *#{&1[:name]}* you would get `#{&1[:potential_points]} points`"))
+        |> Enum.map(&("*If* you beat *#{&1[:name]}*, you would get `#{&1[:potential_points]} points`"))
         |> Enum.join("\n")
     end
 
