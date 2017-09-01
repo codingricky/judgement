@@ -193,6 +193,18 @@ defmodule Judgement.SlackService do
         SlackClient.send_message(message, channel, slack)
     end
 
+    def what_if_i_played(slack_id, channel, slack, opponent_name) do
+        name = get_name_from_slack_id(slack_id)
+        player = Player.with_name(name)
+        opponent = Player.with_name(opponent_name)
+        message = case (player != nil && name != nil) do
+            true -> "If you beat *#{opponent_name}* you would get `#{calculate_points_diff(player, opponent)} points`"
+            false -> "Could not find players"            
+        end
+
+        SlackClient.send_message(message, channel, slack)            
+    end
+
     defp potential_opponents(player) do
         Player.all_active
         |> Enum.filter(&(&1.id != player.id))
@@ -202,8 +214,21 @@ defmodule Judgement.SlackService do
         |> Enum.join("\n")
     end
 
+    defp potential_opponent(player, opponent) do
+        o
+        |> Enum.filter(&(&1.id != player.id))
+        |> Enum.map(&(%{name: &1.name, potential_points: calculate_points_diff(player, &1)}))
+        |> Enum.sort(&(&1[:potential_points] > &2[:potential_points]))
+        |> Enum.map(&("If you beat *#{&1[:name]}* you would get `#{&1[:potential_points]} points`"))
+        |> Enum.join("\n")
+    end
+
     defp calculate_points_diff(winner, opponent) do
-        {winner_after, _loser_after} = GameService.calculate_result(winner.rating.value, opponent.rating.value)
-        winner_after - winner.rating.value
+        if (winner.id == opponent.id) do
+            0
+        else
+            {winner_after, _loser_after} = GameService.calculate_result(winner.rating.value, opponent.rating.value)
+            winner_after - winner.rating.value
+        end
     end
 end

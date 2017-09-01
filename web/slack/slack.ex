@@ -29,7 +29,8 @@ defmodule SlackRtm do
   @best_day_to_play_txt ~r/what's the best day to play (?<player>[A-Za-z]+)?/
   @what_would_player_say_txt ~r/(w|W)hat would (?<player>[A-Za-z]+)? say/
   @who_should_i_play_txt ~r/(w|W)ho should I play/
-
+  @what_if_i_played_txt ~r/(w|W)hat if I played (?<player>[A-Za-z]+)?/
+  
   def handle_connect(_slack, state) do
     Logger.info "connected"
     {:ok, state}
@@ -72,7 +73,8 @@ defmodule SlackRtm do
           regex? message.text, @change_colours_txt -> change_colour(message, slack)
           regex? message.text, @best_day_to_play_txt -> best_day_to_play(message, slack)
           regex? message.text, @what_would_player_say_txt -> what_would_player_say(message, slack)
-          regex? message.text, @who_should_i_play_txt -> who_should_i_play(message, slack)     
+          regex? message.text, @who_should_i_play_txt -> who_should_i_play(message, slack)
+          regex? message.text, @what_if_i_played_txt -> what_if_i_played(message, slack)               
           regex? message.text, ~r/(^reverse show$)|(^woes$)/ -> reverse_show(message, slack)          
           regex? message.text, ~r/help/ -> help(message, slack)
           regex? message.text, ~r/^show$/ -> show(message, slack)
@@ -182,6 +184,15 @@ defmodule SlackRtm do
   defp who_should_i_play(message, slack) do
     Logger.info "who should I play"
     SlackService.who_should_i_play(message.user, message.channel, slack)
+  end
+
+  defp what_if_i_played(message, slack) do
+    Logger.info "what_if_i_played"
+    case Regex.named_captures(@what_if_i_played_txt, message.text) do
+      %{"player" => player} -> SlackService.what_if_i_played(message.user, message.channel, slack, player)
+      
+      _ -> ""
+    end      
   end
 
   def handle_info({:message, _text, _channel}, _slack, state) do
