@@ -77,10 +77,9 @@ defmodule SlackRtm do
           regex? message.text, @who_should_i_play_txt -> who_should_i_play(message, slack)
           regex? message.text, @what_if_i_played_txt -> what_if_i_played(message, slack)               
           regex? message.text, ~r/(^reverse show$)|(^woes$)/ -> reverse_show(message, slack)          
-          regex? message.text, ~r/help/ -> help(message, slack)
+          regex? message.text, ~r/^help$/ -> help(message, slack)
           regex? message.text, ~r/^show$/ -> show(message, slack)
-          regex? message.text, ~r/show full/ -> show_full(message, slack)
-          regex? message.text, ~r/(^reverse show$)|(^woes$)/ -> reverse_show(message, slack)
+          regex? message.text, ~r/^show fullS/ -> show_full(message, slack)
           true -> store_quote(message, slack)
       end
     catch

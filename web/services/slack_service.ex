@@ -214,15 +214,6 @@ defmodule Judgement.SlackService do
         |> Enum.join("\n")
     end
 
-    defp potential_opponent(player, opponent) do
-        o
-        |> Enum.filter(&(&1.id != player.id))
-        |> Enum.map(&(%{name: &1.name, potential_points: calculate_points_diff(player, &1)}))
-        |> Enum.sort(&(&1[:potential_points] > &2[:potential_points]))
-        |> Enum.map(&("If you beat *#{&1[:name]}* you would get `#{&1[:potential_points]} points`"))
-        |> Enum.join("\n")
-    end
-
     defp calculate_points_diff(winner, opponent) do
         if (winner.id == opponent.id) do
             0
