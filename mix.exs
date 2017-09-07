@@ -47,7 +47,7 @@ defmodule Judgement.Mixfile do
       {:phoenix_html_simplified_helpers, "~> 1.3.2"},
       {:number, "~> 0.4.1"},
       {:slack, "~> 0.12.0"},
-      {:mock, "~> 0.2.0", only: :test}
+      {:mock, "~> 0.3.1", only: :test}
     ]
   end
 
