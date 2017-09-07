@@ -19,7 +19,7 @@ defmodule Judgement do
   end
 
   defp slack_bot_child do
-    if System.get_env("SLACK_API_TOKEN"), do: [worker(Slack.Bot, [SlackRtm, [], System.get_env("SLACK_API_TOKEN")])], else: []
+    if String.length(System.get_env("SLACK_API_TOKEN")) > 0, do: [worker(Slack.Bot, [SlackRtm, [], System.get_env("SLACK_API_TOKEN")])], else: []
   end
 
   # Tell Phoenix to update the endpoint configuration

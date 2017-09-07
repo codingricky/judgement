@@ -1,4 +1,7 @@
 defmodule Judgement.SlackService do
+
+    @chat_client Application.get_env(:judgement, :chat_client)
+    
     alias Judgement.GameService
     alias Judgement.Player
     alias Judgement.Result
@@ -161,10 +164,7 @@ defmodule Judgement.SlackService do
     end
 
     defp get_name_from_slack_id(slack_id) do
-        case Slack.Web.Users.info(slack_id) do
-            %{"user" => %{"name" => name}} -> name
-            _ -> ""
-        end
+        @chat_client.get_name_from_slack_id(slack_id)
     end
 
     defp player_from_slack_id(slack_id) do
@@ -172,16 +172,13 @@ defmodule Judgement.SlackService do
     end
 
     def get_avatar_url_from_slack_id(slack_id) do
-        case Slack.Web.Users.info(slack_id) do
-            %{"user" => %{"profile" => %{"image_original" => url}}} -> url
-            _ -> ""
-        end
+        @chat_client.get_avatar_url_from_slack_id(slack_id)
     end
 
     def what_would_player_say(player_name, channel, slack) do
         message = Player.with_name(player_name)
                     |> Player.random_quote()
-        SlackClient.send_message("*#{player_name}* says _#{message}_", channel, slack)
+        @chat_client.send_message("*#{player_name}* says _#{message}_", channel, slack)
     end
 
     def who_should_i_play(slack_id, channel, slack) do
@@ -190,7 +187,7 @@ defmodule Judgement.SlackService do
             nil -> "#{name} can not be found"
             player -> potential_opponents(player)
         end
-        SlackClient.send_message(message, channel, slack)
+        @chat_client.send_message(message, channel, slack)
     end
 
     def what_if_i_played(slack_id, channel, slack, opponent_name) do
@@ -202,7 +199,7 @@ defmodule Judgement.SlackService do
             false -> "Could not find players"            
         end
 
-        SlackClient.send_message(message, channel, slack)            
+        @chat_client.send_message(channel, message, slack)            
     end
 
     defp potential_opponents(player) do

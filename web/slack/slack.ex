@@ -1,3 +1,5 @@
+require IEx
+
 defmodule SlackRtm do
 
   @chat_client Application.get_env(:judgement, :chat_client)

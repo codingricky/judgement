@@ -14,4 +14,11 @@ defmodule MockSlackClient do
         false
     end
 
+    def get_name_from_slack_id(slack_id) do
+        ""
+    end
+
+    def get_avatar_url_from_slack_id(slack_id) do
+        ""
+    end
 end

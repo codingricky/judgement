@@ -17,7 +17,9 @@ defmodule Judgement.SlackTest do
         {MockSlackClient, [],
         [is_bot: fn(_user) -> false end,
         send_message: fn(channel, message, _slack) -> Logger.info("sending message #{inspect(message)} to #{inspect(channel)}") end,
-        post_message: fn(channel, message, _attachments) -> Logger.info("posting message #{inspect(message)} to #{inspect(channel)}")  end]}
+        post_message: fn(channel, message, _attachments) -> Logger.info("posting message #{inspect(message)} to #{inspect(channel)}")  end,
+        get_name_from_slack_id: fn(slack_id) -> @winner end,
+        get_avatar_url_from_slack_id: fn(slack_id) -> "http://example.com" end]},
     ]) do
         Ecto.Adapters.SQL.Sandbox.checkout(Repo)
         
