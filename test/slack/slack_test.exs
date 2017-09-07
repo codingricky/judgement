@@ -5,10 +5,13 @@ defmodule Judgement.SlackTest do
 
     alias Judgement.Repo
     alias Judgement.GameService
+    alias Judgement.Player
     
     @channel "testing"
     @winner "winner@example.com"
     @loser "loser@example.com"
+    @expected_show "1. *winner*  _10-0_ `1058 points` _100% 10_\n2. *loser*  _0-10_ `932 points` _0% 0_"
+    
 
     setup_with_mocks([
         {MockSlackClient, [],
@@ -35,9 +38,18 @@ defmodule Judgement.SlackTest do
     end
 
     test "show", %{slack: slack} do
-        expected_show = "1. *winner*  _10-0_ `1058 points` _100% 10_\n2. *loser*  _0-10_ `932 points` _0% 0_"
         SlackRtm.handle_event(message("show"), slack, nil)
-        assert called MockSlackClient.send_message(@channel, expected_show, slack)
+        assert called MockSlackClient.send_message(@channel, @expected_show, slack)
+    end
+
+    test "show full", %{slack: slack} do
+        SlackRtm.handle_event(message("show full"), slack, nil)
+        assert called MockSlackClient.send_message(@channel, @expected_show, slack)
+    end
+
+    test "create result", %{slack: slack} do
+        SlackRtm.handle_event(message("winner b loser"), slack, nil)
+        assert 11 == Player.wins(Player.find(@winner))
     end
 
     defp message(message) do
