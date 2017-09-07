@@ -78,3 +78,4 @@ config :judgement, Judgement.Repo,
   ssl: true
 
 config :slack, respond_to_slack: (if System.get_env("RESPOND_TO_SLACK") == "true", do: true, else: false)
+config :judgement, :chat_client, SlackClient

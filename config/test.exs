@@ -7,7 +7,7 @@ config :judgement, Judgement.Endpoint,
   server: false
 
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :info
 
 # Configure your database
 config :judgement, Judgement.Repo,
@@ -18,4 +18,5 @@ config :judgement, Judgement.Repo,
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
-  config :slack, respond_to_slack: false
+config :slack, respond_to_slack: false
+config :judgement, :chat_client, MockSlackClient

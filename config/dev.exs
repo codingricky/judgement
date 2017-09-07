@@ -58,4 +58,5 @@ config :judgement, Judgement.Repo,
 
 config :slack, respond_to_slack: true
 config :oauth2, debug: true
-  
+
+config :judgement, :chat_client, MockSlackClient

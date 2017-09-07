@@ -1,6 +1,6 @@
-require IEx
-
 defmodule SlackRtm do
+
+  @chat_client Application.get_env(:judgement, :chat_client)
   use Slack
   require Logger
 
@@ -40,9 +40,9 @@ defmodule SlackRtm do
   def handle_event(message = %{type: "message"}, slack, state) do
     user = message[:user]
     Logger.info "#{inspect(message)} from #{inspect(slack.me[:name])}"
-    is_bot = is_bot(user)
+    is_bot = @chat_client.is_bot(user)
     Logger.info "#{inspect(user)} is_bot=#{inspect(is_bot)}"
-    case is_bot(user) do 
+    case is_bot do 
       true -> nil
       false -> handle_message(message, slack)
     end
@@ -51,18 +51,6 @@ defmodule SlackRtm do
   end
 
   def handle_event(_, _, state), do: {:ok, state}
-  
-  def is_bot(user) do
-    if user == nil do 
-        true
-    else
-      case Slack.Web.Users.info(user) do
-        %{"user" => %{"is_bot" => is_bot}} -> is_bot
-        _ -> true
-      end 
-    end
-  end
-
 
   defp handle_message(message, slack) do
      try do
@@ -95,22 +83,22 @@ defmodule SlackRtm do
 
   defp help(message, slack) do
     Logger.info("help")
-    SlackClient.send_message(@help_message, message.channel, slack)
+    client_send_message(@help_message, message.channel, slack)
   end
 
   defp show_full(message, slack) do
     Logger.info("show full")
-    SlackClient.send_message(SlackService.show_full, message.channel, slack)
+    client_send_message(SlackService.show_full, message.channel, slack)
   end
 
   defp show(message, slack) do
     Logger.info("show")
-    SlackClient.send_message(SlackService.show, message.channel, slack)
+    client_send_message(SlackService.show, message.channel, slack)
   end
 
   defp reverse_show(message, slack) do
     Logger.info("reverse show")
-    SlackClient.send_message(SlackService.reverse_show, message.channel, slack)
+    client_send_message(SlackService.reverse_show, message.channel, slack)
   end
 
   defp lookup(message, slack) do
@@ -130,14 +118,14 @@ defmodule SlackRtm do
     end
     Logger.info("result=#{inspect(result)}")
     case result do
-      {_, result_message} -> SlackClient.send_message(result_message, message.channel, slack) 
+      {_, result_message} -> client_send_message(result_message, message.channel, slack) 
     end
   end
 
   defp h2h(message, slack) do 
     Logger.info("h2h")
     case Regex.named_captures(@h2h_txt, message.text) do
-      %{"player_1" => player_1, "player_2" => player_2} -> SlackClient.send_message(SlackService.h2h(player_1, player_2), message.channel, slack)
+      %{"player_1" => player_1, "player_2" => player_2} -> client_send_message(SlackService.h2h(player_1, player_2), message.channel, slack)
       _ -> ""
     end
   end
@@ -145,7 +133,7 @@ defmodule SlackRtm do
   defp mine(message, slack) do
     Logger.info("mine")
     case Regex.named_captures(@mine_txt, message.text) do
-      %{"player" => player} -> SlackClient.send_message(SlackService.who_does_this_player_mine(player), message.channel, slack)
+      %{"player" => player} -> client_send_message(SlackService.who_does_this_player_mine(player), message.channel, slack)
       _ -> ""
     end
   end
@@ -153,7 +141,7 @@ defmodule SlackRtm do
   defp change_colour(message, slack) do
     Logger.info("change colour")
     case Regex.named_captures(@change_colours_txt, message.text) do
-      %{"player" => player, "colour" => colour} -> SlackClient.send_message(SlackService.change_colour(player, colour), message.channel, slack)
+      %{"player" => player, "colour" => colour} -> client_send_message(SlackService.change_colour(player, colour), message.channel, slack)
       _ -> ""
     end
   end
@@ -161,7 +149,7 @@ defmodule SlackRtm do
   defp best_day_to_play(message, slack) do
     Logger.info("best day")
     case Regex.named_captures(@best_day_to_play_txt, message.text) do
-      %{"player" => player} -> SlackClient.send_message("The best day to play #{player} is #{SlackService.best_day_to_play(player)}", message.channel, slack)
+      %{"player" => player} -> client_send_message("The best day to play #{player} is #{SlackService.best_day_to_play(player)}", message.channel, slack)
       _ -> ""
     end
   end
@@ -190,9 +178,12 @@ defmodule SlackRtm do
     Logger.info "what_if_i_played"
     case Regex.named_captures(@what_if_i_played_txt, message.text) do
       %{"player" => player} -> SlackService.what_if_i_played(message.user, message.channel, slack, player)
-      
       _ -> ""
     end      
+  end
+
+  defp client_send_message(message, channel, slack) do
+    @chat_client.send_message(channel, message, slack)
   end
 
   def handle_info({:message, _text, _channel}, _slack, state) do
