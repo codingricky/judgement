@@ -52,6 +52,17 @@ defmodule Judgement.SlackTest do
         assert 11 == Player.wins(Player.find(@winner))
     end
 
+    test "h2h", %{slack: slack} do
+        expected_h2h = "*winner* h2h *loser* 10 wins 0 losses 100%"
+        SlackRtm.handle_event(message("winner h2h loser"), slack, nil)
+        assert called MockSlackClient.send_message(@channel, expected_h2h, slack)        
+    end
+
+    # test "what if I played player", %{slack: slack} do
+    #     SlackRtm.handle_event(message("what if I played loser?"), slack, nil)
+    #     assert called MockSlackClient.send_message(@channel, @expected_show, slack)                
+    # end
+
     defp message(message) do
         %{type: "message", text: message, channel: @channel}        
     end
