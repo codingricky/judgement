@@ -106,6 +106,12 @@ defmodule Judgement.SlackTest do
         assert called MockSlackClient.send_message(@channel, expected_message, slack)
     end
 
+    test "where am I ranked", %{slack: slack} do
+        expected_message = "winner has a ranking of *1* and `1058 points`"
+        SlackRtm.handle_event(message("where am I ranked?"), slack, nil)
+        assert called MockSlackClient.send_message(@channel, expected_message, slack)
+    end
+
     defp message(message) do
         %{type: "message", text: message, channel: @channel, user: "winner"}        
     end

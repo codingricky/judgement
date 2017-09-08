@@ -141,6 +141,11 @@ defmodule Judgement.GameService do
         |> convert_players_to_leaderboard_map
     end
 
+    def ranking(player) do
+      active_leaderboard()
+        |> Enum.find(&(&1[:player_id] == player.id))
+    end
+
     def active_leaderboard() do
       Player
         |> Repo.all

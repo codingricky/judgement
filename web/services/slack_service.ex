@@ -190,18 +190,6 @@ defmodule Judgement.SlackService do
         @chat_client.send_message(channel, message, slack)
     end
 
-    def what_if_i_played(slack_id, channel, slack, opponent_name) do
-        name = get_name_from_slack_id(slack_id)
-        player = Player.with_name(name)
-        opponent = Player.with_name(opponent_name)
-        message = case (player != nil && name != nil) do
-            true -> "*If* you beat *#{opponent_name}*, you would get `#{calculate_points_diff(player, opponent)} points`"
-            false -> "Could not find players"            
-        end
-
-        @chat_client.send_message(channel, message, slack)            
-    end
-
     defp potential_opponents(player) do
         Player.all_active
         |> Enum.filter(&(&1.id != player.id))
@@ -219,4 +207,33 @@ defmodule Judgement.SlackService do
             winner_after - winner.rating.value
         end
     end
+
+    def what_if_i_played(slack_id, channel, slack, opponent_name) do
+        name = get_name_from_slack_id(slack_id)
+        player = Player.with_name(name)
+        opponent = Player.with_name(opponent_name)
+        message = case (player != nil && name != nil) do
+            true -> "*If* you beat *#{opponent_name}*, you would get `#{calculate_points_diff(player, opponent)} points`"
+            false -> "Could not find players"            
+        end
+
+        @chat_client.send_message(channel, message, slack)            
+    end
+
+    def where_am_i_ranked(slack_id, channel, slack) do
+        name = get_name_from_slack_id(slack_id)
+        message = case Player.with_name(name) do
+            nil -> "#{name} can not be found"            
+            player -> ranking(player)
+        end
+        @chat_client.send_message(channel, message, slack)
+    end
+
+    defp ranking(player) do
+        case GameService.ranking(player) do
+            %{rank: rank, name: name, points: points} -> "#{name} has a ranking of *#{rank}* and `#{points} points`"
+            _ -> "#{player.name} has no active ranking"
+        end
+    end
+
 end

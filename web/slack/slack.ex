@@ -21,6 +21,7 @@ defmodule SlackRtm do
             *who should I play?*                           gives you the stats on potential winnings
             *change [player]'s colour to [new colour]*     change a player's colour
             *what if I played [player]*                    what if I played a player, how many points I would get
+            *where am I currently ranked?*                 where am I currently ranked
             *help*                                         this message
     """
 
@@ -33,6 +34,7 @@ defmodule SlackRtm do
   @what_would_player_say_txt ~r/(w|W)hat would (?<player>[A-Za-z]+)? say/
   @who_should_i_play_txt ~r/(w|W)ho should I play/
   @what_if_i_played_txt ~r/(w|W)hat if I played (?<player>[A-Za-z]+)?/
+  @where_am_i_ranked_txt ~r/(w|W)here am I ranked/
   
   def handle_connect(_slack, state) do
     Logger.info "connected"
@@ -65,7 +67,8 @@ defmodule SlackRtm do
           regex? message.text, @best_day_to_play_txt -> best_day_to_play(message, slack)
           regex? message.text, @what_would_player_say_txt -> what_would_player_say(message, slack)
           regex? message.text, @who_should_i_play_txt -> who_should_i_play(message, slack)
-          regex? message.text, @what_if_i_played_txt -> what_if_i_played(message, slack)               
+          regex? message.text, @what_if_i_played_txt -> what_if_i_played(message, slack) 
+          regex? message.text, @where_am_i_ranked_txt -> where_am_i_ranked(message, slack)
           regex? message.text, ~r/(^reverse show$)|(^woes$)/ -> reverse_show(message, slack)          
           regex? message.text, ~r/^help$/ -> help(message, slack)
           regex? message.text, ~r/^show$/ -> show(message, slack)
@@ -177,11 +180,16 @@ defmodule SlackRtm do
   end
 
   defp what_if_i_played(message, slack) do
-    Logger.info "what_if_i_played"
+    Logger.info "what if I played"
     case Regex.named_captures(@what_if_i_played_txt, message.text) do
       %{"player" => player} -> SlackService.what_if_i_played(message.user, message.channel, slack, player)
       _ -> ""
     end      
+  end
+
+  defp where_am_i_ranked(message, slack) do
+    Logger.info "where am I ranked"
+     SlackService.where_am_i_ranked(message.user, message.channel, slack)
   end
 
   defp client_send_message(message, channel, slack) do
