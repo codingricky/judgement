@@ -21,7 +21,7 @@ defmodule SlackRtm do
             *who should I play?*                           gives you the stats on potential winnings
             *change [player]'s colour to [new colour]*     change a player's colour
             *what if I played [player]*                    what if I played a player, how many points I would get
-            *where am I currently ranked?*                 where am I currently ranked
+            *where am I ranked?*                           where am I currently ranked
             *help*                                         this message
     """
 
