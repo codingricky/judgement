@@ -28,8 +28,8 @@ defmodule Judgement.SlackService do
 
     def convert_leaderboard_to_string(leaderboard) do
         leaderboard
-        |> Enum.map(&("#{&1[:rank]}. *#{&1[:name]}*  _#{&1[:wins]}-#{&1[:losses]}_ `#{&1[:points]} points` _#{Number.Percentage.number_to_percentage(&1[:ratio], precision: 0)} #{&1[:streak]}_"))
-        |> Enum.join("\n")
+            |> Enum.map(&("#{&1[:rank]}. *#{&1[:name]}*  _#{&1[:wins]}-#{&1[:losses]}_ `#{&1[:points]} points` _#{Number.Percentage.number_to_percentage(&1[:ratio], precision: 0)} #{&1[:streak]}_"))
+            |> Enum.join("\n")
     end
 
     def h2h(player_1, player_2) do
@@ -77,9 +77,9 @@ defmodule Judgement.SlackService do
                                         create_field("winning % by day", winning_percent_by_day(winning_ratio), false),
                                         create_field("Last 10 Results", last_10_games, false)] ++ h2h_record}]
             
-            SlackClient.post_message(channel, "", %{attachments: Poison.encode!(attachments)})
+            @chat_client.post_message(channel, "", %{attachments: Poison.encode!(attachments)})
         else
-            SlackClient.send_message("#{player_name} not found", channel, slack)          
+            @chat_client.send_message(channel, "#{player_name} not found", slack)          
         end
 
     end
