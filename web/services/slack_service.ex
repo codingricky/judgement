@@ -187,7 +187,7 @@ defmodule Judgement.SlackService do
             nil -> "#{name} can not be found"
             player -> potential_opponents(player)
         end
-        @chat_client.send_message(message, channel, slack)
+        @chat_client.send_message(channel, message, slack)
     end
 
     def what_if_i_played(slack_id, channel, slack, opponent_name) do

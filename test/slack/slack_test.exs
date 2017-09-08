@@ -84,6 +84,11 @@ defmodule Judgement.SlackTest do
         assert called MockSlackClient.send_message(@channel, expected_message, slack)
     end
 
+    # TODO add a proper assert
+    test "lookup winner", %{slack: slack} do
+        SlackRtm.handle_event(message("lookup winner"), slack, nil)
+    end
+
     defp message(message) do
         %{type: "message", text: message, channel: @channel, user: "winner"}        
     end
