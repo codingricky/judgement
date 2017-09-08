@@ -19,7 +19,7 @@ defmodule Judgement do
   end
 
   defp slack_bot_child do
-    api_token = System.get_env("SLACK_API_TOKEN1") || ""
+    api_token = System.get_env("SLACK_API_TOKEN") || ""
     if String.length(api_token) > 0, do: [worker(Slack.Bot, [SlackRtm, [], System.get_env("SLACK_API_TOKEN")])], else: []
   end
 
