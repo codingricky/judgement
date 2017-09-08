@@ -6,6 +6,7 @@ defmodule Judgement.SlackTest do
     alias Judgement.Repo
     alias Judgement.GameService
     alias Judgement.Player
+    alias Judgement.Quote
     
     @channel "testing"
     @winner "winner@example.com"
@@ -87,6 +88,13 @@ defmodule Judgement.SlackTest do
     # TODO add a proper assert
     test "lookup winner", %{slack: slack} do
         SlackRtm.handle_event(message("lookup winner"), slack, nil)
+    end
+
+    test "store quote", %{slack: slack} do
+        SlackRtm.handle_event(message("a random quote"), slack, nil)
+        SlackRtm.handle_event(message("another random quote"), slack, nil)        
+        winner = Player.find(@winner)
+        assert 2 == length(Quote.quotes(winner))
     end
 
     defp message(message) do
