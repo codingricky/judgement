@@ -66,6 +66,24 @@ defmodule Judgement.SlackTest do
         assert called MockSlackClient.send_message(@channel, expected_message, slack)                
     end
 
+    test "mine", %{slack: slack} do
+        expected_message = "loser *58 points*"
+        SlackRtm.handle_event(message("who does winner mine?"), slack, nil)
+        assert called MockSlackClient.send_message(@channel, expected_message, slack)                
+    end
+
+    test "reverse show", %{slack: slack} do
+        expected_message = "1. *loser*  _0-10_ `932 points` _0% 0_\n2. *winner*  _10-0_ `1058 points` _100% 10_"
+        SlackRtm.handle_event(message("reverse show"), slack, nil)
+        assert called MockSlackClient.send_message(@channel, expected_message, slack)                
+    end
+
+    test "who should I play", %{slack: slack} do
+        expected_message = "*If* you beat *loser*, you would get `4 points`"
+        SlackRtm.handle_event(message("who should I play"), slack, nil)
+        assert called MockSlackClient.send_message(@channel, expected_message, slack)
+    end
+
     defp message(message) do
         %{type: "message", text: message, channel: @channel, user: "winner"}        
     end
