@@ -97,6 +97,15 @@ defmodule Judgement.SlackTest do
         assert 2 == length(Quote.quotes(winner))
     end
 
+    test "what would someone say", %{slack: slack} do
+        winner_quote = "hello"
+        expected_message = "*winner* says _#{winner_quote}_"        
+        winner = Player.find(@winner)
+        GameService.create_quote(winner_quote, winner.id)
+        SlackRtm.handle_event(message("what would winner say?"), slack, nil)
+        assert called MockSlackClient.send_message(@channel, expected_message, slack)
+    end
+
     defp message(message) do
         %{type: "message", text: message, channel: @channel, user: "winner"}        
     end

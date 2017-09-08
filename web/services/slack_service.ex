@@ -178,7 +178,7 @@ defmodule Judgement.SlackService do
     def what_would_player_say(player_name, channel, slack) do
         message = Player.with_name(player_name)
                     |> Player.random_quote()
-        @chat_client.send_message("*#{player_name}* says _#{message}_", channel, slack)
+        @chat_client.send_message(channel, "*#{player_name}* says _#{message}_", slack)
     end
 
     def who_should_i_play(slack_id, channel, slack) do
