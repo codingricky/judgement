@@ -22,7 +22,6 @@
       <td>
         <div class='player'>
         <%= link to: player_path(@conn, :show, player[:player_id], class: "player") do %>
-            <%= img_tag(static_path(@conn, "/images/head.png")) %>
             <strong><%= player[:name] %></strong>
         <% end %>
         </div>
