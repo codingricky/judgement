@@ -31,7 +31,7 @@ defmodule SlackRtm do
   @mine_txt ~r/who does (?<player>[A-Za-z]+) mine/
   @change_colours_txt ~r/change (?<player>[A-Za-z]+)'s colour to (?<colour>[A-Za-z]+)/
   @best_day_to_play_txt ~r/what's the best day to play (?<player>[A-Za-z]+)?/
-  @what_would_player_say_txt ~r/(w|W)hat would (?<player>[A-Za-z]+)? say/
+  @what_would_player_say_txt ~r/(w|W)hat (would|did) (?<player>[A-Za-z]+)? say/
   @who_should_i_play_txt ~r/(w|W)ho should I play/
   @what_if_i_played_txt ~r/(w|W)hat if I played (?<player>[A-Za-z]+)?/
   @where_am_i_ranked_txt ~r/(w|W)here am I ranked/
