@@ -29,6 +29,7 @@ config :judgement, Google,
 
 config :slack, api_token: System.get_env("SLACK_API_TOKEN")
 config :judgement, api_secret: System.get_env("SECRET_KEY_PASSPHRASE") || "bogus" 
+config :phoenix, :json_library, Jason
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
