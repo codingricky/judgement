@@ -1,7 +1,15 @@
-    <h2>Log in</h2>
+<div class="jumbotron">
+    <%= if @current_user do %>
+            <h2>Welcome, <%= @current_user.name %>!</h2>
+            <p><img src="<%= @current_user.avatar %>" class="img-circle"/></p>
+            <p><%= link "Logout", to: auth_path(@conn, :delete), method: :delete, class: "btn btn-danger" %></p>
+        <% else %>
+            <br>
+            <br>
 
-    <div class="container">
-    You need to sign in or sign up before continuing.
-    </div>
-
-    <%= link("Sign in with Gmail", to: "/auth/google") %>
+            <a class="btn btn-primary btn-lg" href="<%= auth_path @conn, :index %>">
+            <i class="fa fa-google"></i>
+            Sign in with Google
+            </a>
+    <% end %>
+</div>

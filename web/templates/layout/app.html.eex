@@ -1,22 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>DiUS Table Tennis Championship</title>
+  <title>Table Tennis Championship</title>
   <meta name='apple-mobile-web-app-capable' content='yes' />
   <meta name='apple-mobile-web-app-status-bar-style' content='black' />
   <meta name='viewport', content='width = device-width, initial-scale = 1, maximum-scale = 1, user-scalable = yes' />
   
   <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+  <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
+  </script>
  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' rel='stylesheet' type='text/css'>
 
+ <script>
+    function start() {
+      gapi.load('auth2', function() {
+        auth2 = gapi.auth2.init({
+          client_id: '420154444662-qbhboq8cvgulkia5jc0uqlu0bq2gnjo3.apps.googleusercontent.com',
+          // Scopes to request in addition to 'profile' and 'email'
+          //scope: 'additional_scope'
+        });
+      });
+    }
+  </script>
 </head>
 <body>
   <div id='container'>
     <header>
     <a class="brand" href="/">
-        <div class='brand-name'>DiUS Table Tennis Championship</div>
+        <div class='brand-name'>Table Tennis Championship</div>
         <div class='brand-label'>Home</div>
     </a>
       <nav>

@@ -2,20 +2,21 @@ require IEx
 defmodule Judgement.AuthController do
     use Judgement.Web, :controller
     
-    @doc """
-    This action is reached via `/auth/:provider` and redirects to the OAuth2 provider
-    based on the chosen strategy.
-    """
-    def index(conn, %{"provider" => provider}) do
-      redirect conn, external: authorize_url!(provider)
-    end
+  @doc """
+  This action is reached via `/auth` and redirects to the Google OAuth2 provider.
+  """
+  def index(conn, _params) do
+    redirect conn, external: Google.authorize_url!(
+      scope: "https://www.googleapis.com/auth/userinfo.email"
+    )
+  end
   
-    def delete(conn, _params) do
-      conn
-      |> put_flash(:info, "You have been logged out!")
-      |> configure_session(drop: true)
-      |> redirect(to: "/")
-    end
+  def delete(conn, _params) do
+    conn
+    |> put_flash(:info, "You have been logged out!")
+    |> configure_session(drop: true)
+    |> redirect(to: "/")
+  end
   
     @doc """
     This action is reached via `/auth/:provider/callback` is the the callback URL that
@@ -23,13 +24,20 @@ defmodule Judgement.AuthController do
     be used to request an access token. The access token will then be used to
     access protected resources on behalf of the user.
     """
-    def callback(conn, %{"provider" => provider, "code" => code}) do
+  def callback(conn, %{"code" => code}) do
       # Exchange an auth code for an access token
-      client = get_token!(provider, code)
-  
+      client = Google.get_token!(code: code)
+
       # Request the user's data with the access token
-      user = get_user!(provider, client)
-      if user[:hd] != "dius.com.au" do
+      scope = "https://www.googleapis.com/plus/v1/people/me/openIdConnect"
+      %{body: user} = OAuth2.Client.get!(client, scope)
+
+      current_user = %{
+        name: user["name"],
+        avatar: String.replace_suffix(user["picture"], "?sz=50", "?sz=400")
+      }
+      supported_domain = System.get_env("SUPPORTED_DOMAIN")
+      if user["hd"] != supported_domain do
         conn
         |> send_resp(401, "Not allowed")
         |> halt    
@@ -39,18 +47,5 @@ defmodule Judgement.AuthController do
         |> put_session(:access_token, client.token.access_token)
         |> redirect(to: "/")
       end
-
-
-    end
-  
-    defp authorize_url!("google"),   do: Google.authorize_url!(scope: "email profile")
-    defp authorize_url!(_), do: raise "No matching provider available"
-  
-    defp get_token!("google", code),   do: Google.get_token!(code: code, client_secret: System.get_env("GOOGLE_CLIENT_SECRET"))
-    defp get_token!(_, _), do: raise "No matching provider available"
-  
-    defp get_user!("google", client) do
-      %{status_code: 200, body: user} = OAuth2.Client.get!(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect")
-      %{name: user["name"], avatar: user["picture"], hd: user["hd"]}
     end
   end

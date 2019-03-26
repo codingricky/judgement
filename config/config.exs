@@ -25,7 +25,7 @@ config :logger, :console,
 config :judgement, Google,
   client_id: System.get_env("GOOGLE_CLIENT_ID"),
   client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
-  redirect_uri: System.get_env("GOOGLE_REDIRECT")
+  redirect_uri: System.get_env("GOOGLE_REDIRECT_URI")
 
 config :slack, api_token: System.get_env("SLACK_API_TOKEN")
 config :judgement, api_secret: System.get_env("SECRET_KEY_PASSPHRASE") || "bogus" 

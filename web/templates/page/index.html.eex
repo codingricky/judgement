@@ -1,5 +1,5 @@
 <div class="row-fluid">
-  <h1><%= img_tag("images/DIUS_lightbg_@2x.png", class: 'logo') %></h1>
+  <h1></h1>
 </div>
 <div class="row-fluid">
   <div class='span12'>
