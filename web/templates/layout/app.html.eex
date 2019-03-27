@@ -18,7 +18,7 @@
     function start() {
       gapi.load('auth2', function() {
         auth2 = gapi.auth2.init({
-          client_id: '420154444662-qbhboq8cvgulkia5jc0uqlu0bq2gnjo3.apps.googleusercontent.com',
+          client_id: '420154444662-qbhboq8cvgulkia5jc0uqlu0bq2gnjo3.apps.googleusercontent.com"',
           // Scopes to request in addition to 'profile' and 'email'
           //scope: 'additional_scope'
         });
@@ -29,13 +29,10 @@
 <body>
   <div id='container'>
     <header>
-    <a class="brand" href="/">
-        <div class='brand-name'>Table Tennis Championship</div>
-        <div class='brand-label'>Home</div>
-    </a>
-      <nav>
-        <ul><li class="home">Home</li></ul>
-      </nav>
+      <a class="brand" href="/">
+          <div class='brand-name'>Table Tennis Championship</div>
+          <div class='brand-label'>Home</div>
+      </a>
     </header>
 
     <div>

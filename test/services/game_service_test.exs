@@ -76,13 +76,13 @@ defmodule Judgement.GameServiceTest do
     end
 
     test "undos the last result multiple times" do
-        {:ok, winner} = GameService.create_player("john", "john@example.com")
-        {:ok, loser} = GameService.create_player("joe", "joe@example.com")
+        {:ok, winner} = GameService.create_player("john1", "john1@example.com")
+        {:ok, loser} = GameService.create_player("joe1", "joe1@example.com")
 
         create_result(winner, loser, 2)
         GameService.undo_last_result()
         GameService.undo_last_result()
-        
+
         saved_winner = GameService.find_player(winner.email)
         assert 1000 == saved_winner.rating.value
 
@@ -95,7 +95,7 @@ defmodule Judgement.GameServiceTest do
     def create_result(winner, loser, times) do
         if (times > 0) do
             GameService.create_result(winner, loser)
-            create_result(winner, loser, times - 1)            
+            create_result(winner, loser, times - 1)
         end
     end
 

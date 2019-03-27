@@ -93,6 +93,7 @@ defmodule Judgement.GameService do
       loser_rating = Rating |> Repo.get(loser.rating.id)      
       loser_rating_before = loser_rating.value
       {winner_rating_after, loser_rating_after} = calculate_result(winner_rating_before, loser_rating_before)
+      Logger.info("winner rating #{winner_rating_before} #{winner_rating_after} and loser rating #{loser_rating_before} #{loser_rating_after}")
 
       Ecto.Changeset.change(winner.rating, %{value: winner_rating_after})
         |> Repo.update

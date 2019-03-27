@@ -51,7 +51,7 @@ defmodule Judgement.Result do
 
   def all_sorted_by_creation_date do 
       Repo.all(from r in Judgement.Result,
-                  order_by: [desc: r.inserted_at]) 
+                  order_by: [desc: r.id]) 
       |> Repo.preload(:winner) 
       |> Repo.preload(:loser)
   end
