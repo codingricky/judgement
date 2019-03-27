@@ -67,12 +67,6 @@ defmodule Judgement.SlackTest do
         assert called MockSlackClient.send_message(@channel, expected_message, slack)                
     end
 
-    test "mine", %{slack: slack} do
-        expected_message = "loser *58 points*"
-        SlackRtm.handle_event(message("who does winner mine?"), slack, nil)
-        assert called MockSlackClient.send_message(@channel, expected_message, slack)                
-    end
-
     test "reverse show", %{slack: slack} do
         expected_message = "1. *loser*  _0-10_ `932 points` _0% 0_\n2. *winner*  _10-0_ `1058 points` _100% 10_"
         SlackRtm.handle_event(message("reverse show"), slack, nil)
@@ -88,22 +82,6 @@ defmodule Judgement.SlackTest do
     # TODO add a proper assert
     test "lookup winner", %{slack: slack} do
         SlackRtm.handle_event(message("lookup winner"), slack, nil)
-    end
-
-    test "store quote", %{slack: slack} do
-        SlackRtm.handle_event(message("a random quote"), slack, nil)
-        SlackRtm.handle_event(message("another random quote"), slack, nil)        
-        winner = Player.find(@winner)
-        assert 2 == length(Quote.quotes(winner))
-    end
-
-    test "what would someone say", %{slack: slack} do
-        winner_quote = "hello"
-        expected_message = "*winner* says _#{winner_quote}_"        
-        winner = Player.find(@winner)
-        GameService.create_quote(winner_quote, winner.id)
-        SlackRtm.handle_event(message("what would winner say?"), slack, nil)
-        assert called MockSlackClient.send_message(@channel, expected_message, slack)
     end
 
     test "where am I ranked", %{slack: slack} do

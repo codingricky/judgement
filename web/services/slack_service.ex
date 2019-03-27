@@ -6,7 +6,6 @@ defmodule Judgement.SlackService do
     alias Judgement.Player
     alias Judgement.Result
     alias Judgement.Repo
-    alias Judgement.Quote
     require Logger
     
     @days %{1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", 7 => "Sunday"}
@@ -147,16 +146,6 @@ defmodule Judgement.SlackService do
        Player.best_day_to_play(name)
     end
 
-    def store_quote(message, slack_id) do
-        player = player_from_slack_id(slack_id)
-        Logger.info("resolved #{slack_id} to #{inspect(player)}")
-        store_avatar(player, slack_id)
-        if player && !Quote.find_by_quote_and_player_id(message, player.id) do
-            Logger.info("saving #{inspect(message)} against #{inspect(player.name)}")
-            GameService.create_quote(message, player.id)
-        end
-    end
-
     def store_avatar(player, slack_id) do
         if player.avatar_url == nil do
             GameService.update_avatar_url(player, get_avatar_url_from_slack_id(slack_id))
@@ -173,12 +162,6 @@ defmodule Judgement.SlackService do
 
     def get_avatar_url_from_slack_id(slack_id) do
         @chat_client.get_avatar_url_from_slack_id(slack_id)
-    end
-
-    def what_would_player_say(player_name, channel, slack) do
-        message = Player.with_name(player_name)
-                    |> Player.random_quote()
-        @chat_client.send_message(channel, "*#{player_name}* says _#{message}_", slack)
     end
 
     def who_should_i_play(slack_id, channel, slack) do
